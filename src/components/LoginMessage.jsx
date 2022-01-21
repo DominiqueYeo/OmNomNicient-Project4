@@ -1,18 +1,19 @@
+import React from 'react';
+
 /*
  * ========================================================
  * ========================================================
  *
- *                    Base Controller
+ *      Component for Signup and Login message
  *
  * ========================================================
  * ========================================================
  */
-class BaseController {
-  constructor(name, db, model) {
-    this.name = name;
-    this.db = db;
-    this.model = model;
-  }
+export default function LoginMessage({ displayMessage }) {
+  return (
+    <div>
+      {console.log(displayMessage)}
+      {displayMessage}
+    </div>
+  );
 }
-
-export default BaseController;

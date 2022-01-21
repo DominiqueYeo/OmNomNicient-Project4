@@ -1,59 +1,100 @@
-// const bcrypt = require("bcrypt");
-// const BaseController = require("./baseController");
-// const { PW_SALT_ROUND, JWT_SALT } = process.env;
-// const jwt = require("jsonwebtoken");
-
-import bcrypt from 'bcrypt'
+/* eslint-disable no-useless-constructor */
+/*
+ * ========================================================
+ * ========================================================
+ *
+ *                    Imports
+ *
+ * ========================================================
+ * ========================================================
+ */
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import BaseController from './baseController.mjs';
-import jwt from 'jsonwebtoken'
+
+dotenv.config();
 const { PW_SALT_ROUND, JWT_SALT } = process.env;
 
-
+/*
+ * ========================================================
+ * ========================================================
+ *
+ *                    User Controller
+ *
+ * ========================================================
+ * ========================================================
+ */
 class UserController extends BaseController {
   constructor(name, db, model) {
     super(name, db, model);
   }
 
-  getGame(req, res) {
-    return res.status(200).json({ new: "/game" });
-  }
-
-  async signup(req, res) {
-    const { user_name, user_email, user_password } = req.body;
-    if (!user_name || !user_email || !user_password) {
-      return res.status(500).json({ msg: "Something is missing" });
+  /*
+  * ========================================================
+  *   When user tries to signup, check if username exists,
+  *                else store data in DB
+  * ========================================================
+  */
+  async signUp(req, res) {
+    const { userEmail, userPassword } = req.body;
+    // If email or password missing, inform player
+    if (!userEmail || !userPassword) {
+      return res.send('details missing');
     }
-    const hash = await bcrypt.hash(user_password, Number(PW_SALT_ROUND));
-    const newUser = await this.model.create({
-      user_name,
-      user_email,
-      user_password: hash,
+
+    // Check if username already exists
+    const checkIfUserExists = await this.model.findOne({
+      where: {
+        userEmail,
+      },
     });
-    const payload = { id: newUser.id, user_email: newUser.user_email };
-    const token = jwt.sign(payload, JWT_SALT, { expiresIn: "30mins" });
-    return res.status(200).json({ newUser, token, payload });
+
+    // If no such username in database, create new one
+    if (checkIfUserExists === null) {
+      const hash = await bcrypt.hash(userPassword, Number(PW_SALT_ROUND));
+      await this.model.create({
+        userEmail,
+        userPassword: hash,
+      });
+      return res.status(200).send('sign up success');
+    }
+    // Else inform user that username already exists
+    return res.send('user exists');
   }
 
+  /*
+  * ========================================================
+  *      When user tries to login, authenticate login
+  *         details and let user know the outcome
+  * ========================================================
+  */
   async login(req, res) {
-    const { user_email, user_password } = req.body;
-    if (!user_email || !user_password) {
-      return res.status(500).json({ msg: "Something is wrong" });
+    const { userEmail, userPassword } = req.body;
+
+    // If email or password missing, inform player
+    if (!userEmail || !userPassword) {
+      return res.send('details missing');
     }
-    const user = await this.model.findOne({ where: { user_email } });
+
+    // If email not in DB, inform player
+    const user = await this.model.findOne({ where: { userEmail } });
     if (!user) {
-      res.status(404).json({ err: "user not found" });
+      return res.send('username or password incorrect');
     }
 
-    const compare = await bcrypt.compare(user_password, user.user_password);
+    // Compare password in DB with password entered
+    const compare = await bcrypt.compare(userPassword, user.userPassword);
 
+    // If entered password matches DB password, inform client side JS that login is successful
     if (compare) {
-      const payload = { id: user.id, user_email: user.user_email };
-      const token = jwt.sign(payload, JWT_SALT, { expiresIn: "30mins" });
+      const payload = { id: user.id, userEmail: user.userEmail };
+      const token = jwt.sign(payload, JWT_SALT, { expiresIn: '30mins' });
       return res.json({ success: true, token, payload });
     }
-    return res.status(401).json({ error: "wrong password" });
+    // If password incorrect inform user
+    return res.send('username or password incorrect');
   }
 }
 
-// module.exports = UserController;
-export default UserController
+export default UserController;
