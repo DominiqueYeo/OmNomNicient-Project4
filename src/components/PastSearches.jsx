@@ -13,15 +13,13 @@ import React from 'react';
  * ========================================================
  * ========================================================
  *
- *      Component for Signup and Login message
+ *               Component for Past Searches
  *
  * ========================================================
  * ========================================================
  */
-export default function LoginMessage({ displayMessage }) {
+export default function PastSearches() {
   return (
-    <div>
-      {displayMessage}
-    </div>
+    <div>Past searches</div>
   );
 }

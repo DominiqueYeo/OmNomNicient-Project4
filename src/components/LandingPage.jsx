@@ -2,25 +2,29 @@
  * ========================================================
  * ========================================================
  *
- *                         Imports
+ *                      Imports
  *
  * ========================================================
  * ========================================================
  */
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LoginMessage from './LoginMessage.jsx';
 
 /*
- * ========================================================
- * ========================================================
- *
- *   Component for Landing Page when user first loads App
- *
- * ========================================================
- * ========================================================
- */
-export default function LandingPage() {
+* ========================================================
+* ========================================================
+*
+*   Component for Landing Page when user first loads App
+*
+* ========================================================
+* ========================================================
+*/
+export default function LandingPage({ obj }) {
+  // React hook to change to home page on successful login
+  const navigate = useNavigate();
+
   // State and setter for login details
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -74,9 +78,12 @@ export default function LandingPage() {
       if (response.data === 'username or password incorrect') {
         setMessage('Invalid login. Please try again.');
       }
-      // If successful, inform user to login
+      // If successful, redirect to home page
       if (response.data.success === true) {
-        setMessage('Login success!');
+        const { userId } = response.data;
+        obj.setter(userId);
+        // On successful login, redirect to home page
+        navigate('/');
       }
     });
   };

@@ -2,7 +2,7 @@
  * ========================================================
  * ========================================================
  *
- *                         Imports
+ *                       Imports
  *
  * ========================================================
  * ========================================================
@@ -40,7 +40,8 @@ app.use(methodOverride('_method'));
 app.use(express.static('public'));
 // Expose the files stored in the distribution folder
 app.use(express.static('dist'));
-
+// Expose the files stored in the uploads folder
+app.use(express.static('uploads'));
 /*
  * ========================================================
  * ========================================================

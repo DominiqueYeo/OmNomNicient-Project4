@@ -88,9 +88,12 @@ class UserController extends BaseController {
 
     // If entered password matches DB password, inform client side JS that login is successful
     if (compare) {
+      const userId = user.id;
       const payload = { id: user.id, userEmail: user.userEmail };
       const token = jwt.sign(payload, JWT_SALT, { expiresIn: '30mins' });
-      return res.json({ success: true, token, payload });
+      return res.json({
+        success: true, token, payload, userId,
+      });
     }
     // If password incorrect inform user
     return res.send('username or password incorrect');

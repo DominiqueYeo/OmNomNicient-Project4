@@ -2,21 +2,23 @@
  * ========================================================
  * ========================================================
  *
- *                         Imports
+ *                      Imports
  *
  * ========================================================
  * ========================================================
  */
 import { resolve } from 'path';
-// import routers
+// Import routers
 import userRouter from '../routers/userRouter.mjs';
-// import controllers
+import newSearchRouter from '../routers/newSearchRouter.mjs';
+// Import controllers
 import UserController from '../controllers/userController.mjs';
-// import models
+import NewSearchController from '../controllers/newSearchController.mjs';
+// Import models
 import db from '../models/index.mjs';
-
 // Initialise controllers
 const userController = new UserController('User', db, db.User);
+const newSearchController = new NewSearchController();
 
 /*
  * ========================================================
@@ -28,10 +30,16 @@ const userController = new UserController('User', db, db.User);
  * ========================================================
  */
 export default function routes(app) {
-  // special JS page. Include the webpack index.html file
-  app.get('/', (request, response) => {
+  // Route for Single Page Application HTML file
+  app.get('/main', (request, response) => {
     response.sendFile(resolve('dist', 'main.html'));
   });
-
+  // Redirect all other routes to '/main'
+  app.get('*', (request, response) => {
+    response.redirect('/main');
+  });
+  // User sign up and login routes
   app.use('/users', userRouter(userController));
+  // Routes for new image searches
+  app.use('/new-search', newSearchRouter(newSearchController));
 }

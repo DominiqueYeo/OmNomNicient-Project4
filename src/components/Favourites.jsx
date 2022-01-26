@@ -13,15 +13,13 @@ import React from 'react';
  * ========================================================
  * ========================================================
  *
- *      Component for Signup and Login message
+ *           Component for Favourited Foods
  *
  * ========================================================
  * ========================================================
  */
-export default function LoginMessage({ displayMessage }) {
+export default function Favourites() {
   return (
-    <div>
-      {displayMessage}
-    </div>
+    <div>Fav</div>
   );
 }

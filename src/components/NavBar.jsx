@@ -8,20 +8,27 @@
  * ========================================================
  */
 import React from 'react';
+import { Outlet, Link } from 'react-router-dom';
 
 /*
  * ========================================================
  * ========================================================
  *
- *      Component for Signup and Login message
+ *                 Component for Nav Bar
  *
  * ========================================================
  * ========================================================
  */
-export default function LoginMessage({ displayMessage }) {
+export default function NavBar() {
   return (
     <div>
-      {displayMessage}
+      <nav>
+        <Link to="/">New Search</Link>
+        <Link to="/fav">Favourites</Link>
+        <Link to="/eats">Past Eats</Link>
+        <Link to="/searches">Past Searches</Link>
+      </nav>
+      <Outlet />
     </div>
   );
 }
