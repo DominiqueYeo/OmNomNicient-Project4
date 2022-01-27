@@ -13,20 +13,12 @@ export default function pastEatModel(sequelize, DataTypes) {
         key: 'id',
       },
     },
-    dishName: {
-      type: DataTypes.STRING,
-    },
-    image: {
-      type: DataTypes.STRING,
-    },
-    rating: {
+    restaurantId: {
       type: DataTypes.INTEGER,
-    },
-    address: {
-      type: DataTypes.STRING,
-    },
-    phoneNumber: {
-      type: DataTypes.INTEGER,
+      references: {
+        model: 'restaurants',
+        key: 'id',
+      },
     },
     createdAt: {
       allowNull: false,

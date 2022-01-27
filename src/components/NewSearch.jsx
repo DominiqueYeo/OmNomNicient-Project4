@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /*
  * ========================================================
  * ========================================================
@@ -23,6 +25,7 @@ export default function NewSearch({ obj }) {
   // State and setter for photo and postal code
   const [file, setFile] = useState();
   const [postalCode, setPostalCode] = useState();
+  const [uploadedImage, setUploadedImage] = useState();
 
   // Callback to send photo, postal code and userId to DB
   const sendInfoToDB = (event) => {
@@ -34,7 +37,10 @@ export default function NewSearch({ obj }) {
     data.append('userId', obj.state);
     data.append('file', file);
     axios.post('/new-search/', data).then(
-      (response) => console.log(response),
+      (response) => {
+        // const { filePath } = response.data;
+        // setUploadedImage(filePath);
+      },
     );
   };
 
@@ -48,6 +54,7 @@ export default function NewSearch({ obj }) {
         <input type="file" id="file" name="file" onChange={(event) => setFile(event.target.files[0])} accept="image/*" />
         <button type="submit" onClick={sendInfoToDB}>Submit </button>
       </form>
+      {/* <img src={uploadedImage} alt="chicken rice" /> */}
     </>
   );
 }

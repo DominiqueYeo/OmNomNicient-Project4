@@ -1,24 +1,22 @@
-export default function favouriteModel(sequelize, DataTypes) {
-  return sequelize.define('favourite', {
+export default function restaurantModel(sequelize, DataTypes) {
+  return sequelize.define('restaurant', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    userId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'users',
-        key: 'id',
-      },
+    restaurantName: {
+      type: DataTypes.STRING,
     },
-    restaurantId: {
+    image: {
+      type: DataTypes.STRING,
+    },
+    rating: {
       type: DataTypes.INTEGER,
-      references: {
-        model: 'restaurants',
-        key: 'id',
-      },
+    },
+    address: {
+      type: DataTypes.STRING,
     },
     createdAt: {
       allowNull: false,

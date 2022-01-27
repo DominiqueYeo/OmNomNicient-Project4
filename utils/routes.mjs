@@ -18,7 +18,7 @@ import NewSearchController from '../controllers/newSearchController.mjs';
 import db from '../models/index.mjs';
 // Initialise controllers
 const userController = new UserController('User', db, db.User);
-const newSearchController = new NewSearchController();
+const newSearchController = new NewSearchController('Past_search', db, db.PastSearch);
 
 /*
  * ========================================================
