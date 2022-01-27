@@ -48,7 +48,9 @@ class NewSearchController extends BaseController {
     // Get file type
     const fileType = req.file.mimetype.split('/')[1];
     // Get file name
-    const newFileName = `${req.file.filename}.${fileType}`;
+    // const newFileName = `${req.file.filename}.${fileType}`;
+    // const newFileName = `searchPhoto.${fileType}`
+    const newFileName = `searchPhoto.jpeg`
     // Add file type as extension to file name
     fs.rename(`./public/uploads/${req.file.filename}`, `./public/uploads/${newFileName}`, () => {
       console.log('callback');
@@ -59,6 +61,7 @@ class NewSearchController extends BaseController {
     *               2. Analyse dish in photo
     * ========================================================
     */
+   
     /*
     * ========================================================
     *         3. Search google maps for places selling dish
