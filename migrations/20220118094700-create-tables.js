@@ -53,21 +53,14 @@ module.exports = {
       },
     });
 
-    await queryInterface.createTable('favourites', {
+    await queryInterface.createTable('restaurants', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      user_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'users',
-          key: 'id',
-        },
-      },
-      dish_name: {
+      restaurant_name: {
         type: Sequelize.STRING,
       },
       image: {
@@ -78,9 +71,6 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING,
-      },
-      phone_number: {
-        type: Sequelize.INTEGER,
       },
       created_at: {
         allowNull: false,
@@ -106,25 +96,43 @@ module.exports = {
           key: 'id',
         },
       },
-      dish_name: {
-        allowNull: false,
-        type: Sequelize.STRING,
+      restaurant_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'restaurants',
+          key: 'id',
+        },
       },
-      image: {
+      created_at: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.DATE,
       },
-      rating: {
+      updated_at: {
         allowNull: false,
+        type: Sequelize.DATE,
+      },
+    });
+
+    await queryInterface.createTable('favourites', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      address: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      phone_number: {
-        allowNull: false,
+      user_id: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+      },
+      restaurant_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'restaurants',
+          key: 'id',
+        },
       },
       created_at: {
         allowNull: false,
@@ -138,8 +146,9 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('past_eats');
     await queryInterface.dropTable('favourites');
+    await queryInterface.dropTable('past_eats');
+    await queryInterface.dropTable('restaurants');
     await queryInterface.dropTable('past_searches');
     await queryInterface.dropTable('users');
   },

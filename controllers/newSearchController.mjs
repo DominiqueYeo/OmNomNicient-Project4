@@ -53,7 +53,7 @@ class NewSearchController extends BaseController {
     fs.rename(`./public/uploads/${req.file.filename}`, `./public/uploads/${newFileName}`, () => {
       console.log('callback');
     });
-    // res.send('File uploaded');
+    // res.json({ filePath: `./public/uploads/${newFileName}` });
     /*
     * ========================================================
     *               2. Analyse dish in photo
