@@ -1,3 +1,12 @@
+/*
+ * ========================================================
+ * ========================================================
+ *
+ *                       Imports
+ *
+ * ========================================================
+ * ========================================================
+ */
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import methodOverride from 'method-override';
@@ -6,6 +15,15 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+/*
+ * ========================================================
+ * ========================================================
+ *
+ *                    Server middleware
+ *
+ * ========================================================
+ * ======================================================== 
+ */   
 // Initialise Express instance
 const app = express();
 // Set the Express view engine to expect EJS templates
@@ -22,8 +40,17 @@ app.use(methodOverride('_method'));
 app.use(express.static('public'));
 // Expose the files stored in the distribution folder
 app.use(express.static('dist'));
-
-// Set up Webpack in dev env
+// Expose the files stored in the uploads folder
+app.use(express.static('uploads'));
+/*
+ * ========================================================
+ * ========================================================
+ *
+ *              Set up Webpack in dev env
+ *
+ * ========================================================
+ * ======================================================== 
+ */  
 const env = process.env.NODE_ENV || 'development';
 if (env === 'development') {
 
@@ -53,9 +80,26 @@ if (env === 'development') {
   }));
 }
 
-// Bind route definitions to the Express application
+/*
+ * ========================================================
+ * ========================================================
+ *
+ *            Helper function to bind route definitions 
+ *               to the Express application
+ *
+ * ========================================================
+ * ========================================================  
+ */
 bindRoutes(app);
 
-// Set Express to listen on the given port
+/*
+ * ========================================================
+ * ========================================================
+ *
+ *        Set Express to listen on the given port 
+ *
+ * ========================================================
+ * ========================================================  
+ */
 const PORT = process.env.PORT || 3004;
 app.listen(PORT);
