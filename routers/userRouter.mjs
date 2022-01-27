@@ -1,7 +1,20 @@
 import express from 'express';
+
 const router = express.Router();
 
-export default function (controller) {
-  // special JS page. Include the webpack index.html file
-  router.post("/signup",controller.signup.bind(controller))
+/*
+ * ========================================================
+ * ========================================================
+ *
+ *            User Router with various paths
+ *
+ * ========================================================
+ * ========================================================
+ */
+export default function userRouter(controller) {
+  // Route for new sign up
+  router.post('/signup', controller.signUp.bind(controller));
+  // Route for login attempt
+  router.post('/login', controller.login.bind(controller));
+  return router;
 }

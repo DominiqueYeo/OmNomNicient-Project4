@@ -1,8 +1,6 @@
-"use strict";
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("users", {
+    await queryInterface.createTable('users', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,15 +8,11 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       user_email: {
-        allowNull: false,
         type: Sequelize.STRING,
       },
       user_password: {
-        allowNull: false,
         type: Sequelize.STRING,
       },
-      // ... [<OTHER_COLUMNS>]
-      // created_at and updated_at are required
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -29,7 +23,7 @@ module.exports = {
       },
     });
 
-    await queryInterface.createTable("past_searches", {
+    await queryInterface.createTable('past_searches', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -37,19 +31,18 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       user_id: {
-        allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
       dish_name: {
-        allowNull: false,
         type: Sequelize.STRING,
       },
       postal_code: {
-        allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
-      // ... [<OTHER_COLUMNS>]
-      // created_at and updated_at are required
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -60,7 +53,7 @@ module.exports = {
       },
     });
 
-    await queryInterface.createTable("favourites", {
+    await queryInterface.createTable('favourites', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -68,8 +61,50 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       user_id: {
-        allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+      },
+      dish_name: {
+        type: Sequelize.STRING,
+      },
+      image: {
+        type: Sequelize.STRING,
+      },
+      rating: {
+        type: Sequelize.INTEGER,
+      },
+      address: {
+        type: Sequelize.STRING,
+      },
+      phone_number: {
+        type: Sequelize.INTEGER,
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+    });
+
+    await queryInterface.createTable('past_eats', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
+      user_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
       dish_name: {
         allowNull: false,
@@ -81,7 +116,7 @@ module.exports = {
       },
       rating: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
       address: {
         allowNull: false,
@@ -89,53 +124,8 @@ module.exports = {
       },
       phone_number: {
         allowNull: false,
-        type: Sequelize.STRING,
-      },
-      // ... [<OTHER_COLUMNS>]
-      // created_at and updated_at are required
-      created_at: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updated_at: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-    });
-
-    await queryInterface.createTable("past_eats", {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      user_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-      },
-      dish_name: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      image: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      rating: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      address: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      phone_number: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      // ... [<OTHER_COLUMNS>]
-      // created_at and updated_at are required
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -147,12 +137,10 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+  down: async (queryInterface) => {
+    await queryInterface.dropTable('past_eats');
+    await queryInterface.dropTable('favourites');
+    await queryInterface.dropTable('past_searches');
+    await queryInterface.dropTable('users');
   },
 };
