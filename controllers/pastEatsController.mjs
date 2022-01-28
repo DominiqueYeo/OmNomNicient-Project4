@@ -1,7 +1,3 @@
-/* eslint-disable no-loop-func */
-/* eslint-disable no-await-in-loop */
-/* eslint-disable max-len */
-/* eslint-disable class-methods-use-this */
 /* eslint-disable no-useless-constructor */
 /*
  * ========================================================
@@ -17,7 +13,7 @@ import BaseController from './baseController.mjs';
  * ========================================================
  * ========================================================
  *
- *                  Favourite Controller
+ *                  Past Eats Controller
  *
  * ========================================================
  * ========================================================
@@ -55,6 +51,70 @@ class PastEatsController extends BaseController {
       },
     });
     res.send('done!');
+  }
+
+  async retrieveFromPastEats(req, res) {
+    const { Op } = this.db.Sequelize;
+    const userId = req.body.state;
+    // Retrieve all restaurant id's added to past eats by the user
+    const restaurantArr = await this.model.findAll({
+      where: {
+        userId,
+      },
+    });
+    const restaurantIdArr = [];
+    restaurantArr.forEach((restaurant) => { restaurantIdArr.push(restaurant.restaurantId); });
+    if (restaurantArr.length !== 0) {
+      // Retrieve data for all restaurants in past eats
+      const retrievedResData = await this.db.Restaurant.findAll({
+        where: {
+          id: {
+            [Op.or]: restaurantIdArr,
+          },
+        },
+      });
+      // Send data to client
+      res.send(retrievedResData);
+    } else {
+      res.send([]);
+    }
+  }
+
+  async removeFromPastEats(req, res) {
+    const { userId } = req.body;
+    const restaurantId = req.body.id;
+    // Remove restaurant from past eats table in DB
+    await this.model.destroy({
+      where: {
+        userId,
+        restaurantId,
+      },
+    });
+    const { Op } = this.db.Sequelize;
+
+    // Retrieve all restaurant id's added to past eats by the user
+    const restaurantArr = await this.model.findAll({
+      where: {
+        userId,
+      },
+    });
+    const restaurantIdArr = [];
+    restaurantArr.forEach((restaurant) => { restaurantIdArr.push(restaurant.restaurantId); });
+
+    if (restaurantArr.length !== 0) {
+      // Retrieve data for all restaurants added to past eats
+      const retrievedResData = await this.db.Restaurant.findAll({
+        where: {
+          id: {
+            [Op.or]: restaurantIdArr,
+          },
+        },
+      });
+      // Send data to client
+      res.send(retrievedResData);
+    } else {
+      res.send([]);
+    }
   }
 }
 

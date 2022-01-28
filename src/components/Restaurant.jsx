@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/prop-types */
 /*
  * ========================================================
@@ -23,7 +24,7 @@ import RemoveButton from './RemoveButton.jsx';
  * ========================================================
  */
 export default function Restaurant({
-  restaurant, fav, pastEats, remove, obj,
+  restaurant, fav, pastEats, remove, obj, removeFavObj, removePastEatsObj,
 }) {
   if (!restaurant) {
     return <div />;
@@ -42,7 +43,7 @@ export default function Restaurant({
       </div>
       <FavButton restaurant={restaurant} fav={fav} obj={obj} />
       <PastEatsButton restaurant={restaurant} pastEats={pastEats} obj={obj} />
-      <RemoveButton restaurant={restaurant} remove={remove} obj={obj} />
+      <RemoveButton restaurant={restaurant} remove={remove} obj={obj} removeFavObj={removeFavObj} removePastEatsObj={removePastEatsObj} />
     </div>
   );
 }

@@ -23,30 +23,29 @@ import React from 'react';
  * ========================================================
  * ========================================================
  */
-export default function RemoveButton({
-  restaurant, remove, obj, removeFavObj, removePastEatsObj,
-}) {
-  if (remove === undefined) {
-    return <div />;
-  }
-  const removeFromFav = () => {
-    restaurant.userId = obj.state;
-    axios.post('/favourite/remove', restaurant).then((response) => {
-      removeFavObj.setter(response.data);
-    });
+export default function SearchButton({ searches }) {
+  const runNewSearch = () => {
+    // restaurant.userId = obj.state;
+    // axios.post('/favourite/', restaurant).then((response) => {
+    //   console.log(response.data);
+    // });
   };
+  console.log(searches);
+  const historyList = searches.map((search) => (
+    <button onClick={runNewSearch} key={search.id}>
+      {search.dishName}
+      {' '}
+      at
+      {' '}
+      {search.postalCode}
+    </button>
+  ));
 
-  const removeFromPastEats = () => {
-    restaurant.userId = obj.state;
-    axios.post('/past-eats/remove', restaurant).then((response) => {
-      removePastEatsObj.setter(response.data);
-    });
-  };
+  console.log(historyList);
 
   return (
     <div>
-      {remove = 'removeFav' && <button onClick={removeFromFav}>Remove</button>}
-      {remove = 'removePastEats' && <button onClick={removeFromPastEats}>Remove Past Eats</button>}
+      {/* {historyList} */}
     </div>
   );
 }

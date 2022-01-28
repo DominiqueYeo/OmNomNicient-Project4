@@ -1,7 +1,3 @@
-/* eslint-disable no-loop-func */
-/* eslint-disable no-await-in-loop */
-/* eslint-disable max-len */
-/* eslint-disable class-methods-use-this */
 /* eslint-disable no-useless-constructor */
 /*
  * ========================================================
@@ -68,21 +64,57 @@ class FavouriteController extends BaseController {
     });
     const restaurantIdArr = [];
     restaurantArr.forEach((restaurant) => { restaurantIdArr.push(restaurant.restaurantId); });
-
-    // Retrieve data for all favourited restaurants
-    const retrievedResData = await this.db.Restaurant.findAll({
-      where: {
-        id: {
-          [Op.or]: restaurantIdArr,
+    if (restaurantArr.length !== 0) {
+      // Retrieve data for all favourited restaurants
+      const retrievedResData = await this.db.Restaurant.findAll({
+        where: {
+          id: {
+            [Op.or]: restaurantIdArr,
+          },
         },
-      },
-    });
-    // Send data to client
-    res.send(retrievedResData);
+      });
+      // Send data to client
+      res.send(retrievedResData);
+    } else {
+      res.send([]);
+    }
   }
 
   async removeFromFavourites(req, res) {
-    console.log(req.body);
+    const { userId } = req.body;
+    const restaurantId = req.body.id;
+    // Remove restaurant from favourites table in DB
+    await this.model.destroy({
+      where: {
+        userId,
+        restaurantId,
+      },
+    });
+    const { Op } = this.db.Sequelize;
+
+    // Retrieve all restaurant id's favourited by the user
+    const restaurantArr = await this.model.findAll({
+      where: {
+        userId,
+      },
+    });
+    const restaurantIdArr = [];
+    restaurantArr.forEach((restaurant) => { restaurantIdArr.push(restaurant.restaurantId); });
+
+    if (restaurantArr.length !== 0) {
+      // Retrieve data for all favourited restaurants
+      const retrievedResData = await this.db.Restaurant.findAll({
+        where: {
+          id: {
+            [Op.or]: restaurantIdArr,
+          },
+        },
+      });
+      // Send data to client
+      res.send(retrievedResData);
+    } else {
+      res.send([]);
+    }
   }
 }
 

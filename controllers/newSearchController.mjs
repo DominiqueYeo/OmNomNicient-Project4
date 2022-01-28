@@ -78,11 +78,13 @@ class NewSearchController extends BaseController {
     const dish = 'chicken+rice';
 
     /* After search is made and TensorFlow has identified dish,
-    store data in DB */
-    await this.model.create({
-      userId,
-      dishName: dish,
-      postalCode,
+    check if stored in DB, else store data in DB */
+    await this.model.findOrCreate({
+      where: {
+        userId,
+        dishName: dish,
+        postalCode,
+      },
     });
     /*
     * ========================================================

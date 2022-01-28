@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 /*
  * ========================================================
  * ========================================================
@@ -23,18 +22,22 @@ import Restaurants from './Restaurants.jsx';
  * ========================================================
  */
 export default function Favourites({ obj }) {
-  const [retrievedRestaurantData, setRetrievedRestaurantData] = useState();
+  const [retrievedFavData, setRetrievedFavData] = useState();
+
   useEffect(() => {
     axios.post('/favourite/retrieve', obj).then((response) => {
-      console.log('y work but no appear');
-      setRetrievedRestaurantData(response.data);
-      // restaurantData = response.data;
-      console.log(response.data);
+      setRetrievedFavData(response.data);
     });
   }, []);
+
+  const removeFavObj = {
+    state: retrievedFavData,
+    setter: setRetrievedFavData,
+  };
+
   return (
     <div>
-      <Restaurants restaurantData={retrievedRestaurantData} remove="removeFav" obj={obj} />
+      <Restaurants restaurantData={retrievedFavData} remove="removeFav" obj={obj} removeFavObj={removeFavObj} />
     </div>
   );
 }

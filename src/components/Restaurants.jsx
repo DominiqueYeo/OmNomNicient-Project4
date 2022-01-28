@@ -22,13 +22,13 @@ import Restaurant from './Restaurant.jsx';
  * ========================================================
  */
 export default function Restaurants({
-  restaurantData, fav, pastEats, remove, obj,
+  restaurantData, fav, pastEats, remove, obj, removeFavObj, removePastEatsObj,
 }) {
   if (!restaurantData) {
     return <div />;
   }
   const resArr = restaurantData;
-  const restaurantList = resArr.map((restaurant, index) => (<Restaurant key={restaurant.index} restaurant={resArr[index]} obj={obj} fav={fav} pastEats={pastEats} remove={remove} />));
+  const restaurantList = resArr.map((restaurant, index) => (<Restaurant key={restaurant.index} restaurant={resArr[index]} obj={obj} removeFavObj={removeFavObj} removePastEatsObj={removePastEatsObj} fav={fav} pastEats={pastEats} remove={remove} />));
 
   return (
     <div>
