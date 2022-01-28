@@ -12,11 +12,13 @@
  * ========================================================
  * ========================================================
  */
-import fs from 'fs';
-import axios from 'axios';
+import fs from "fs";
+import axios from "axios";
+import BaseController from "./baseController.mjs";
+import { spawn, execSync } from "child_process";
 import path from 'path';
 import main from 'require-main-filename';
-import BaseController from './baseController.mjs';
+
 /*
  * ========================================================
  * ========================================================
@@ -32,50 +34,62 @@ class NewSearchController extends BaseController {
   }
 
   /*
-  * ========================================================
-  *      When user submits picture and postal code:
-  *      1. Save photo in backend server
-  *      2. Analyse dish in photo
-  *      3. Search google maps for places selling dish
-  *      4. Send data back to front-end to be displayed
-  * ========================================================
-  */
+   * ========================================================
+   *      When user submits picture and postal code:
+   *      1. Save photo in backend server
+   *      2. Analyse dish in photo
+   *      3. Search google maps for places selling dish
+   *      4. Send data back to front-end to be displayed
+   * ========================================================
+   */
   async newSearch(req, res) {
     /*
-    * ========================================================
-    *           1. Save photo in backend server
-    *              with appropriate extension
-    * ========================================================
-    */
+     * ========================================================
+     *           1. Save photo in backend server
+     *              with appropriate extension
+     * ========================================================
+     */
     // Get file type
-    const fileType = req.file.mimetype.split('/')[1];
+    const fileType = req.file.mimetype.split("/")[1];
     // Get file name
-    const newFileName = `${req.file.filename}.${fileType}`;
+    // const newFileName = `${req.file.filename}.${fileType}`;
+    // const newFileName = `searchPhoto.${fileType}`
+    const newFileName = `searchPhoto.jpeg`;
     // Add file type as extension to file name
-    fs.rename(`./public/uploads/${req.file.filename}`, `./public/uploads/${newFileName}`, () => {
-      console.log('callback');
-    });
-    // gets your app's root path
-    const root = path.dirname(main(newFileName));
-    // joins uploaded file path with root
-    const absolutePath = path.join(root, `/food_app/public/uploads/${newFileName}`);
-    console.log(absolutePath);
+    fs.rename(
+      `./public/uploads/${req.file.filename}`,
+      `./public/uploads/${newFileName}`,
+      () => {
+        console.log("callback");
+      }
+    );
+    let imagePath = './public/uploads/searchPhoto.jpeg'
+    // res.json({ filePath: `./public/uploads/${newFileName}` });
     /*
-    * ========================================================
-    *               2. Analyse dish in photo
-    * ========================================================
-    */
+     * ========================================================
+     *               2. Analyse dish in photo
+     * ========================================================
+     */
+    const pythonTF = execSync(
+      'python3 "./public/tf_script.py" '
+    );
+    console.log(pythonTF)
+    let dishData = fs.readFileSync('./public/outputDish.txt',
+            {encoding:'utf8', flag:'r'});
+
+    console.log('output',dishData)
 
     /*
-    * ========================================================
-    *               3. Store dish and postal code
-    *                     in past searches DB table
-    * ========================================================
-    */
+     * ========================================================
+     *         3. Search google maps for places selling dish
+     * ========================================================
+     */
     const { userId } = req.body;
     const { postalCode } = req.body;
     // Hardcoded for now
-    const dish = 'chicken+rice';
+    const dish = dishData.replace(`_`,`+`);
+    console.log('dish',dish)
+    console.log('postal', postalCode)
 
     /* After search is made and TensorFlow has identified dish,
     check if stored in DB, else store data in DB */
@@ -92,72 +106,93 @@ class NewSearchController extends BaseController {
     * ========================================================
     */
     let restaurantData = [];
-    let lat = '';
-    let lng = '';
+    let lat = "";
+    let lng = "";
+
+   
 
     // 1. Convert users postal code into lat and long coordinates for next API call
     const coordinatesConfig = {
-      method: 'get',
+      method: "get",
       url: `https://maps.googleapis.com/maps/api/geocode/json?address=${postalCode}&key=${process.env.REACT_APP_API_KEY}`,
-      headers: { },
+      headers: {},
     };
 
-    await axios(coordinatesConfig).then((response) => {
-      console.log('lat long working');
-      // to get lat long
-      lat = JSON.stringify(response.data.results[0].geometry.location.lat);
-      lng = JSON.stringify(response.data.results[0].geometry.location.lng);
-    }).catch((error) => {
-      console.log('lat long not working');
-      console.log(error);
-    });
+    console.log('url',coordinatesConfig.url)
+    await axios(coordinatesConfig)
+      .then((response) => {
+        console.log("lat long working");
+        console.log(response.data.results)
+        // to get lat long
+        lat = JSON.stringify(response.data.results[0].geometry.location.lat);
+        lng = JSON.stringify(response.data.results[0].geometry.location.lng);
+      })
+      .catch((error) => {
+        console.log("lat long not working");
+        console.log(error);
+      });
 
     // 2. Get request to generate restaurant data
     const restaurantConfig = {
-      method: 'get',
-      url: `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${`${dish}+near+${postalCode}`}/@${lat},${lng}&key=${process.env.REACT_APP_API_KEY}`,
-      headers: { },
+      method: "get",
+      url: `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${dish}/@${lat},${lng}&key=${
+        process.env.REACT_APP_API_KEY
+      }`,
+      headers: {},
     };
-
-    await axios(restaurantConfig).then((response) => {
-      console.log('restaurant search working');
-
-      // To store restaurant data
-      restaurantData = [];
-      const restaurantsArr = response.data.results;
-      // Run loop to extract relevant data to be displayed
-      for (let i = 0; i < 10; i += 1) {
-        const restaurantObj = {};
-        restaurantObj.name = restaurantsArr[i].name;
-        restaurantObj.address = restaurantsArr[i].formatted_address;
-        restaurantObj.rating = restaurantsArr[i].rating;
-        // If restaurant has no photo, use default photo
-        if (restaurantsArr[i].photos !== undefined) {
-          restaurantObj.photoRef = restaurantsArr[i].photos[0].photo_reference;
-        } else {
-          restaurantObj.photoRef = 'Aap_uEB1Z8sY-kbW61m_hwL4_OqEWGoKVfMM4O-fc3pWW587J8H1640bPYwadvw4tJ26sxe_bvqgocbpeLgbkrU4fjAOsrIxD4re6W-jmYg7fMpfUjCK4hZPi7yl9RZfpxwO1EFxGzsMrv6HzmfY7nKHde6iRVW6Afh4aCOQcZmhpouHkyUc';
+    console.log('restUrl',restaurantConfig.url)
+    await axios(restaurantConfig)
+      .then((response) => {
+        console.log("restaurant search working");
+        console.log('restARR',response.data.results)
+        // To store restaurant data
+        restaurantData = [];
+        const restaurantsArr = response.data.results;
+        // Run loop to extract relevant data to be displayed
+        for (let i = 0; i < 10; i += 1) {
+          const restaurantObj = {};
+          restaurantObj.name = restaurantsArr[i].name?restaurantsArr[i].name:'No Name';
+          restaurantObj.address = restaurantsArr[i].formatted_address?restaurantsArr[i].formatted_address:'No Address';
+          restaurantObj.rating = restaurantsArr[i].rating?restaurantsArr[i].rating:'No Rating';
+          restaurantObj.photoRef =restaurantsArr[i].photos?restaurantsArr[i].photos[0].photo_reference:"noPhoto";
+          // If restaurant has no photo, use default photo
+          // if (restaurantsArr[i].photos !== undefined) {
+          //   restaurantObj.photoRef =
+          //     restaurantsArr[i].photos[0].photo_reference;
+          // } else {
+          //   restaurantObj.photoRef =
+          //     "Aap_uEB1Z8sY-kbW61m_hwL4_OqEWGoKVfMM4O-fc3pWW587J8H1640bPYwadvw4tJ26sxe_bvqgocbpeLgbkrU4fjAOsrIxD4re6W-jmYg7fMpfUjCK4hZPi7yl9RZfpxwO1EFxGzsMrv6HzmfY7nKHde6iRVW6Afh4aCOQcZmhpouHkyUc";
+          // }
+          restaurantData.push(restaurantObj);
         }
-        restaurantData.push(restaurantObj);
-      }
-    }).catch((error) => {
-      console.log('restaurant search not working');
-      console.log(error);
-    });
+      })
+      .catch((error) => {
+        console.log("restaurant search not working");
+        console.log(error);
+      });
 
     // 3. Get restaurant photo
     for (let j = 0; j < restaurantData.length; j += 1) {
+      if(restaurantData[j].photoRef === 'noPhoto'){
+         restaurantData[j].photoRef = 'https://c.tenor.com/ZztVmkKG2TIAAAAM/pepe-sad-pepe-crying.gif'
+         continue;
+      }
       const photoConfig = {
-        method: 'get',
+        method: "get",
         url: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${restaurantData[j].photoRef}&key=${process.env.REACT_APP_API_KEY}`,
-        headers: { },
+        headers: {},
       };
-      await axios(photoConfig).then((photoRes) => {
-        console.log('photo search working');
-        restaurantData[j].photoRef = `https://lh3.googleusercontent.com/${photoRes.request.path}`;
-      }).catch((error) => {
-        console.log('photo search not working');
-        console.log(error);
-      });
+      await axios(photoConfig)
+        .then((photoRes) => {
+          console.log("photo search working");
+          restaurantData[
+            j
+          ].photoRef = `https://lh3.googleusercontent.com/${photoRes.request.path}`;
+        })
+        .catch((error) => {
+          console.log("photo search not working");
+          console.log(error);
+        });
     }
     /*
     * ========================================================
@@ -165,7 +200,7 @@ class NewSearchController extends BaseController {
     * ========================================================
     */
     const data = {
-      restaurantData, filePath: absolutePath,
+      restaurantData, filePath: imagePath,
     };
     res.send(data);
   }
