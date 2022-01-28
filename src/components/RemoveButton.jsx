@@ -29,6 +29,8 @@ export default function RemoveButton({
   if (remove === undefined) {
     return <div />;
   }
+
+  // Button to remove restaurant from favourites page
   const removeFromFav = () => {
     restaurant.userId = obj.state;
     axios.post('/favourite/remove', restaurant).then((response) => {
@@ -36,6 +38,7 @@ export default function RemoveButton({
     });
   };
 
+  // Button to remove restaurant from past eats page
   const removeFromPastEats = () => {
     restaurant.userId = obj.state;
     axios.post('/past-eats/remove', restaurant).then((response) => {

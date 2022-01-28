@@ -70,6 +70,7 @@ export default function LandingPage({ obj }) {
       userEmail: email,
       userPassword: password,
     };
+
     axios.post('/users/login', data).then((response) => {
       // Inform user if they did not key in username or password
       if (response.data === 'details missing') {

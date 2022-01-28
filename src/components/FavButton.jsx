@@ -27,10 +27,11 @@ export default function FavButton({ restaurant, fav, obj }) {
   if (fav !== 'show') {
     return <div />;
   }
+
+  // Send data to server to be stored in DB
   const addToFavDB = () => {
     restaurant.userId = obj.state;
-    axios.post('/favourite/', restaurant).then((response) => {
-      console.log(response.data);
+    axios.post('/favourite/', restaurant).then(() => {
     });
   };
 
