@@ -28,10 +28,14 @@ import NavBar from './components/NavBar.jsx';
 export default function App() {
   // State and setter for userId to be passed to child components
   const [userId, setUserId] = useState();
+  // State and setter for restaurant data to be passed to child components
+  const [restaurantData, setRestaurantData] = useState();
   // State and setter stored in obj, to be sent as a prop
   const data = {
     state: userId,
     setter: setUserId,
+    resState: restaurantData,
+    resSetter: setRestaurantData,
   };
 
   return (
@@ -40,9 +44,9 @@ export default function App() {
         <Route exact path="/main" element={<LandingPage obj={data} />} />
         <Route exact path="/" element={<NavBar />}>
           <Route index element={<NewSearch obj={data} />} />
-          <Route exact path="fav" element={<Favourites />} />
-          <Route exact path="eats" element={<PastEats />} />
-          <Route exact path="searches" element={<PastSearches />} />
+          <Route exact path="fav" element={<Favourites obj={data} />} />
+          <Route exact path="eats" element={<PastEats obj={data} />} />
+          <Route exact path="searches" element={<PastSearches obj={data} />} />
         </Route>
       </Routes>
     </div>

@@ -62,7 +62,9 @@
     "method-override": "^3.0.0",
     "multer": "^1.4.4",
     "pg": "^8.5.1",
+    "react-hook-form": "^7.25.1",
     "react-router-dom": "^6.2.1",
+    "require-main-filename": "^2.0.0",
     "sequelize": "^6.3.5"
   }
 }

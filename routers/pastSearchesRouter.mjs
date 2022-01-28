@@ -8,23 +8,21 @@
  * ========================================================
  */
 import express from 'express';
-import multer from 'multer';
 
-// Set name of photo upload directory
-const multerUpload = multer({ dest: './public/uploads' });
 const router = express.Router();
 
 /*
  * ========================================================
  * ========================================================
  *
- *            Home Page Router with various paths
+ *            Past Searches Router with various paths
  *
  * ========================================================
  * ========================================================
  */
-export default function newSearchRouter(controller) {
-  // Route for new image search by user
-  router.post('/', multerUpload.single('file'), controller.newSearch.bind(controller));
+export default function pastSearchesRouter(controller) {
+  // Route for retrieving past searches
+  router.post('/', controller.pastSearch.bind(controller));
+
   return router;
 }

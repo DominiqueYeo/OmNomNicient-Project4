@@ -14,6 +14,8 @@
  */
 import fs from 'fs';
 import axios from 'axios';
+import path from 'path';
+import main from 'require-main-filename';
 import BaseController from './baseController.mjs';
 /*
  * ========================================================
@@ -53,24 +55,45 @@ class NewSearchController extends BaseController {
     fs.rename(`./public/uploads/${req.file.filename}`, `./public/uploads/${newFileName}`, () => {
       console.log('callback');
     });
-    // res.json({ filePath: `./public/uploads/${newFileName}` });
+    // gets your app's root path
+    const root = path.dirname(main(newFileName));
+    // joins uploaded file path with root
+    const absolutePath = path.join(root, `/food_app/public/uploads/${newFileName}`);
+    console.log(absolutePath);
     /*
     * ========================================================
     *               2. Analyse dish in photo
     * ========================================================
     */
+
     /*
     * ========================================================
-    *         3. Search google maps for places selling dish
+    *               3. Store dish and postal code
+    *                     in past searches DB table
     * ========================================================
     */
     const { userId } = req.body;
     const { postalCode } = req.body;
+    // Hardcoded for now
+    const dish = 'chicken+rice';
+
+    /* After search is made and TensorFlow has identified dish,
+    check if stored in DB, else store data in DB */
+    await this.model.findOrCreate({
+      where: {
+        userId,
+        dishName: dish,
+        postalCode,
+      },
+    });
+    /*
+    * ========================================================
+    *         4. Search google maps for places selling dish
+    * ========================================================
+    */
     let restaurantData = [];
     let lat = '';
     let lng = '';
-    // Hardcoded for now
-    const dish = 'chicken+rice';
 
     // 1. Convert users postal code into lat and long coordinates for next API call
     const coordinatesConfig = {
@@ -136,12 +159,15 @@ class NewSearchController extends BaseController {
         console.log(error);
       });
     }
-    console.log(restaurantData);
     /*
     * ========================================================
-    *        Send data back to front-end to be displayed
+    *        5. Send data back to front-end to be displayed
     * ========================================================
     */
+    const data = {
+      restaurantData, filePath: absolutePath,
+    };
+    res.send(data);
   }
 }
 

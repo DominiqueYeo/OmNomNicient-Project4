@@ -6,14 +6,14 @@ export default function restaurantModel(sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    restaurantName: {
+    name: {
       type: DataTypes.STRING,
     },
-    image: {
+    photoRef: {
       type: DataTypes.STRING,
     },
     rating: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL,
     },
     address: {
       type: DataTypes.STRING,
