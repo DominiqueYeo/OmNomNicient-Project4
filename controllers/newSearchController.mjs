@@ -14,8 +14,6 @@
  */
 import fs from 'fs';
 import axios from 'axios';
-import path from 'path';
-import main from 'require-main-filename';
 import BaseController from './baseController.mjs';
 /*
  * ========================================================
@@ -55,11 +53,7 @@ class NewSearchController extends BaseController {
     fs.rename(`./public/uploads/${req.file.filename}`, `./public/uploads/${newFileName}`, () => {
       console.log('callback');
     });
-    // gets your app's root path
-    const root = path.dirname(main(newFileName));
-    // joins uploaded file path with root
-    const absolutePath = path.join(root, `/food_app/public/uploads/${newFileName}`);
-    console.log(absolutePath);
+    const filePath = `uploads/${newFileName}`;
     /*
     * ========================================================
     *               2. Analyse dish in photo
@@ -75,7 +69,7 @@ class NewSearchController extends BaseController {
     const { userId } = req.body;
     const { postalCode } = req.body;
     // Hardcoded for now
-    const dish = 'chicken+rice';
+    const dish = 'chocolate+cake';
 
     /* After search is made and TensorFlow has identified dish,
     check if stored in DB, else store data in DB */
@@ -104,6 +98,7 @@ class NewSearchController extends BaseController {
 
     await axios(coordinatesConfig).then((response) => {
       console.log('lat long working');
+      console.log(response.data.results);
       // to get lat long
       lat = JSON.stringify(response.data.results[0].geometry.location.lat);
       lng = JSON.stringify(response.data.results[0].geometry.location.lng);
@@ -115,7 +110,7 @@ class NewSearchController extends BaseController {
     // 2. Get request to generate restaurant data
     const restaurantConfig = {
       method: 'get',
-      url: `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${`${dish}+near+${postalCode}`}/@${lat},${lng}&key=${process.env.REACT_APP_API_KEY}`,
+      url: `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${dish}/@${lat},${lng}&key=${process.env.REACT_APP_API_KEY}`,
       headers: { },
     };
 
@@ -128,15 +123,10 @@ class NewSearchController extends BaseController {
       // Run loop to extract relevant data to be displayed
       for (let i = 0; i < 10; i += 1) {
         const restaurantObj = {};
-        restaurantObj.name = restaurantsArr[i].name;
-        restaurantObj.address = restaurantsArr[i].formatted_address;
-        restaurantObj.rating = restaurantsArr[i].rating;
-        // If restaurant has no photo, use default photo
-        if (restaurantsArr[i].photos !== undefined) {
-          restaurantObj.photoRef = restaurantsArr[i].photos[0].photo_reference;
-        } else {
-          restaurantObj.photoRef = 'Aap_uEB1Z8sY-kbW61m_hwL4_OqEWGoKVfMM4O-fc3pWW587J8H1640bPYwadvw4tJ26sxe_bvqgocbpeLgbkrU4fjAOsrIxD4re6W-jmYg7fMpfUjCK4hZPi7yl9RZfpxwO1EFxGzsMrv6HzmfY7nKHde6iRVW6Afh4aCOQcZmhpouHkyUc';
-        }
+        restaurantObj.name = restaurantsArr[i].name ? restaurantsArr[i].name : 'No Name';
+        restaurantObj.address = restaurantsArr[i].formatted_address ? restaurantsArr[i].formatted_address : 'No Address';
+        restaurantObj.rating = restaurantsArr[i].rating ? restaurantsArr[i].rating : 'No Rating';
+        restaurantObj.photoRef = restaurantsArr[i].photos ? restaurantsArr[i].photos[0].photo_reference : 'Aap_uEB1Z8sY-kbW61m_hwL4_OqEWGoKVfMM4O-fc3pWW587J8H1640bPYwadvw4tJ26sxe_bvqgocbpeLgbkrU4fjAOsrIxD4re6W-jmYg7fMpfUjCK4hZPi7yl9RZfpxwO1EFxGzsMrv6HzmfY7nKHde6iRVW6Afh4aCOQcZmhpouHkyUc';
         restaurantData.push(restaurantObj);
       }
     }).catch((error) => {
@@ -165,7 +155,7 @@ class NewSearchController extends BaseController {
     * ========================================================
     */
     const data = {
-      restaurantData, filePath: absolutePath,
+      restaurantData, filePath,
     };
     res.send(data);
   }

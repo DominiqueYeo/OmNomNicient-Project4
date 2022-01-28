@@ -26,7 +26,7 @@ export default function NewSearch({ obj }) {
   // State and setter for photo and postal code
   const [file, setFile] = useState();
   const [postalCode, setPostalCode] = useState();
-  // const [uploadedImage, setUploadedImage] = useState();
+  const [uploadedImage, setUploadedImage] = useState();
   // // State and setter for restaurant data
   // const [restaurantData, setRestaurantData] = useState();
   // Callback to send photo, postal code and userId to DB
@@ -41,7 +41,7 @@ export default function NewSearch({ obj }) {
     axios.post('/new-search/', data).then((response) => {
       // Update restaurant variable state
       obj.resSetter(response.data.restaurantData);
-      // setUploadedImage(response.data.filePath);
+      setUploadedImage(response.data.filePath);
     });
   };
 
@@ -56,7 +56,7 @@ export default function NewSearch({ obj }) {
         <button type="submit" onClick={sendInfoToDB}>Submit </button>
       </form>
       <Restaurants restaurantData={obj.resState} fav="show" pastEats="show" obj={obj} />
-      {/* {uploadedImage ? <img src="/Users/shannon/Documents/bootcamp/projects/project-4/food_app/public/uploads/d55dc6acb6115e9b3226d851e264a4fa.jpeg" alt="chicken rice" /> : <div /> } */}
+      { uploadedImage !== undefined && <img src={uploadedImage} alt="chicken rice" />}
     </>
   );
 }

@@ -45,8 +45,8 @@ export default function RemoveButton({
 
   return (
     <div>
-      {remove = 'removeFav' && <button onClick={removeFromFav}>Remove</button>}
-      {remove = 'removePastEats' && <button onClick={removeFromPastEats}>Remove Past Eats</button>}
+      {remove === 'removeFav' && <button onClick={removeFromFav}>Remove</button>}
+      {remove === 'removePastEats' && <button onClick={removeFromPastEats}>Remove Past Eats</button>}
     </div>
   );
 }
