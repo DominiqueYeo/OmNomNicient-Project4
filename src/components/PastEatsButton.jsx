@@ -1,3 +1,6 @@
+/* eslint-disable react/button-has-type */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-return-assign */
 /* eslint-disable react/prop-types */
 /*
  * ========================================================
@@ -8,36 +11,32 @@
  * ========================================================
  * ========================================================
  */
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Restaurants from './Restaurants.jsx';
+import React from 'react';
 
 /*
  * ========================================================
  * ========================================================
  *
- *           Component for Favourited Foods
+ *      Component for all restaurant results
  *
  * ========================================================
  * ========================================================
  */
-export default function Favourites({ obj }) {
-  const [retrievedFavData, setRetrievedFavData] = useState();
-
-  useEffect(() => {
-    axios.post('/favourite/retrieve', obj).then((response) => {
-      setRetrievedFavData(response.data);
+export default function PastEatsButton({ restaurant, pastEats, obj }) {
+  if (pastEats !== 'show') {
+    return <div />;
+  }
+  const addToPastEatsDB = () => {
+    restaurant.userId = obj.state;
+    axios.post('/past-eats/', restaurant).then((response) => {
+      console.log(response.data);
     });
-  }, []);
-
-  const removeFavObj = {
-    state: retrievedFavData,
-    setter: setRetrievedFavData,
   };
 
   return (
     <div>
-      <Restaurants restaurantData={retrievedFavData} remove="removeFav" obj={obj} removeFavObj={removeFavObj} />
+      {pastEats = 'show' && <button onClick={addToPastEatsDB}>Past Eats</button>}
     </div>
   );
 }

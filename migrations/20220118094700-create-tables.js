@@ -60,14 +60,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      restaurant_name: {
+      name: {
         type: Sequelize.STRING,
       },
-      image: {
+      photo_ref: {
         type: Sequelize.STRING,
       },
       rating: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DECIMAL,
       },
       address: {
         type: Sequelize.STRING,

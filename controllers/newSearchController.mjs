@@ -16,6 +16,9 @@ import fs from "fs";
 import axios from "axios";
 import BaseController from "./baseController.mjs";
 import { spawn, execSync } from "child_process";
+import path from 'path';
+import main from 'require-main-filename';
+
 /*
  * ========================================================
  * ========================================================
@@ -60,6 +63,7 @@ class NewSearchController extends BaseController {
         console.log("callback");
       }
     );
+    let imagePath = './public/uploads/searchPhoto.jpeg'
     // res.json({ filePath: `./public/uploads/${newFileName}` });
     /*
      * ========================================================
@@ -70,10 +74,10 @@ class NewSearchController extends BaseController {
       'python3 "./public/tf_script.py" '
     );
     console.log(pythonTF)
-    let data = fs.readFileSync('./public/outputDish.txt',
+    let dishData = fs.readFileSync('./public/outputDish.txt',
             {encoding:'utf8', flag:'r'});
 
-    console.log('output',data)
+    console.log('output',dishData)
 
     /*
      * ========================================================
@@ -82,11 +86,30 @@ class NewSearchController extends BaseController {
      */
     const { userId } = req.body;
     const { postalCode } = req.body;
+    // Hardcoded for now
+    const dish = dishData.replace(`_`,`+`);
+    console.log('dish',dish)
+    console.log('postal', postalCode)
+
+    /* After search is made and TensorFlow has identified dish,
+    check if stored in DB, else store data in DB */
+    await this.model.findOrCreate({
+      where: {
+        userId,
+        dishName: dish,
+        postalCode,
+      },
+    });
+    /*
+    * ========================================================
+    *         4. Search google maps for places selling dish
+    * ========================================================
+    */
     let restaurantData = [];
     let lat = "";
     let lng = "";
-    // Hardcoded for now
-    const dish = data;
+
+   
 
     // 1. Convert users postal code into lat and long coordinates for next API call
     const coordinatesConfig = {
@@ -95,9 +118,11 @@ class NewSearchController extends BaseController {
       headers: {},
     };
 
+    console.log('url',coordinatesConfig.url)
     await axios(coordinatesConfig)
       .then((response) => {
         console.log("lat long working");
+        console.log(response.data.results)
         // to get lat long
         lat = JSON.stringify(response.data.results[0].geometry.location.lat);
         lng = JSON.stringify(response.data.results[0].geometry.location.lng);
@@ -110,33 +135,34 @@ class NewSearchController extends BaseController {
     // 2. Get request to generate restaurant data
     const restaurantConfig = {
       method: "get",
-      url: `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${`${dish}+near+${postalCode}`}/@${lat},${lng}&key=${
+      url: `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${dish}/@${lat},${lng}&key=${
         process.env.REACT_APP_API_KEY
       }`,
       headers: {},
     };
-
+    console.log('restUrl',restaurantConfig.url)
     await axios(restaurantConfig)
       .then((response) => {
         console.log("restaurant search working");
-
+        console.log('restARR',response.data.results)
         // To store restaurant data
         restaurantData = [];
         const restaurantsArr = response.data.results;
         // Run loop to extract relevant data to be displayed
         for (let i = 0; i < 10; i += 1) {
           const restaurantObj = {};
-          restaurantObj.name = restaurantsArr[i].name;
-          restaurantObj.address = restaurantsArr[i].formatted_address;
-          restaurantObj.rating = restaurantsArr[i].rating;
+          restaurantObj.name = restaurantsArr[i].name?restaurantsArr[i].name:'No Name';
+          restaurantObj.address = restaurantsArr[i].formatted_address?restaurantsArr[i].formatted_address:'No Address';
+          restaurantObj.rating = restaurantsArr[i].rating?restaurantsArr[i].rating:'No Rating';
+          restaurantObj.photoRef =restaurantsArr[i].photos?restaurantsArr[i].photos[0].photo_reference:"noPhoto";
           // If restaurant has no photo, use default photo
-          if (restaurantsArr[i].photos !== undefined) {
-            restaurantObj.photoRef =
-              restaurantsArr[i].photos[0].photo_reference;
-          } else {
-            restaurantObj.photoRef =
-              "Aap_uEB1Z8sY-kbW61m_hwL4_OqEWGoKVfMM4O-fc3pWW587J8H1640bPYwadvw4tJ26sxe_bvqgocbpeLgbkrU4fjAOsrIxD4re6W-jmYg7fMpfUjCK4hZPi7yl9RZfpxwO1EFxGzsMrv6HzmfY7nKHde6iRVW6Afh4aCOQcZmhpouHkyUc";
-          }
+          // if (restaurantsArr[i].photos !== undefined) {
+          //   restaurantObj.photoRef =
+          //     restaurantsArr[i].photos[0].photo_reference;
+          // } else {
+          //   restaurantObj.photoRef =
+          //     "Aap_uEB1Z8sY-kbW61m_hwL4_OqEWGoKVfMM4O-fc3pWW587J8H1640bPYwadvw4tJ26sxe_bvqgocbpeLgbkrU4fjAOsrIxD4re6W-jmYg7fMpfUjCK4hZPi7yl9RZfpxwO1EFxGzsMrv6HzmfY7nKHde6iRVW6Afh4aCOQcZmhpouHkyUc";
+          // }
           restaurantData.push(restaurantObj);
         }
       })
@@ -147,6 +173,10 @@ class NewSearchController extends BaseController {
 
     // 3. Get restaurant photo
     for (let j = 0; j < restaurantData.length; j += 1) {
+      if(restaurantData[j].photoRef === 'noPhoto'){
+         restaurantData[j].photoRef = 'https://c.tenor.com/ZztVmkKG2TIAAAAM/pepe-sad-pepe-crying.gif'
+         continue;
+      }
       const photoConfig = {
         method: "get",
         url: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${restaurantData[j].photoRef}&key=${process.env.REACT_APP_API_KEY}`,
@@ -164,12 +194,15 @@ class NewSearchController extends BaseController {
           console.log(error);
         });
     }
-    console.log(restaurantData);
     /*
-     * ========================================================
-     *        Send data back to front-end to be displayed
-     * ========================================================
-     */
+    * ========================================================
+    *        5. Send data back to front-end to be displayed
+    * ========================================================
+    */
+    const data = {
+      restaurantData, filePath: imagePath,
+    };
+    res.send(data);
   }
 }
 
