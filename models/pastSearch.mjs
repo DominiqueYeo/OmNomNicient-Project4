@@ -16,8 +16,8 @@ export default function pastSearchModel(sequelize, DataTypes) {
     dishName: {
       type: DataTypes.STRING,
     },
-    postalCode: {
-      type: DataTypes.INTEGER,
+    address: {
+      type: DataTypes.STRING,
     },
     createdAt: {
       allowNull: false,

@@ -23,29 +23,24 @@ import React from 'react';
  * ========================================================
  * ========================================================
  */
-export default function SearchButton({ searches }) {
-  const runNewSearch = () => {
-    // restaurant.userId = obj.state;
-    // axios.post('/favourite/', restaurant).then((response) => {
-    //   console.log(response.data);
-    // });
-  };
-  console.log(searches);
-  const historyList = searches.map((search) => (
-    <button onClick={runNewSearch} key={search.id}>
-      {search.dishName}
-      {' '}
-      at
-      {' '}
-      {search.postalCode}
-    </button>
-  ));
-
-  console.log(historyList);
+export default function SearchButton({ search }) {
+  // const runNewSearch = () => {
+  //   // restaurant.userId = obj.state;
+  //   // axios.post('/favourite/', restaurant).then((response) => {
+  //   //   console.log(response.data);
+  //   // });
+  // };
+  console.log('search button component', search);
 
   return (
     <div>
-      {/* {historyList} */}
+      <button>
+        {search.dishName}
+        {' '}
+        at
+        {' '}
+        {search.address}
+      </button>
     </div>
   );
 }

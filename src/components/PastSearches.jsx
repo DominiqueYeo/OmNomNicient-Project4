@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 /* eslint-disable react/prop-types */
 /*
  * ========================================================
@@ -11,7 +10,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import SearchButton from './SearchButton.jsx';
+import SearchButtons from './SearchButtons.jsx';
 /*
  * ========================================================
  * ========================================================
@@ -22,21 +21,19 @@ import SearchButton from './SearchButton.jsx';
  * ========================================================
  */
 export default function PastSearches({ obj }) {
-  // const [pastSearchData, setPastSearchData] = useState();
-  // // let historyList;
-  // useEffect(() => {
-  //   axios.post('/past-searches/', obj).then((response) => {
-  //     // const pastSearchArr = response.data;
-  //     setPastSearchData(response.data);
-  //     // console.log(pastSearchArr);
-  //     // historyList = pastSearchArr.map((search, index) => (<SearchButton key={search.id} search={pastSearchArr[index]} />));
-  //   });
-  // }, []);
+  const [pastSearchData, setPastSearchData] = useState();
 
+  useEffect(() => {
+    axios.post('/past-searches/retrieve', obj).then((response) => {
+      setPastSearchData(response.data);
+    });
+    // console.log('useEffectSearach', pastSearchData);
+  }, []);
+
+  // console.log('outside useEffect', pastSearchData);
   return (
     <div>
-      {/* <SearchButton searches={pastSearchData} /> */}
-      {/* {historyList} */}
+      <SearchButtons searches={pastSearchData} />
     </div>
   );
 }

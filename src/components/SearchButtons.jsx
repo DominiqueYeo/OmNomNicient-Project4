@@ -13,6 +13,7 @@
  */
 import axios from 'axios';
 import React from 'react';
+import SearchButton from './SearchButton.jsx';
 
 /*
  * ========================================================
@@ -23,30 +24,25 @@ import React from 'react';
  * ========================================================
  * ========================================================
  */
-export default function RemoveButton({
-  restaurant, remove, obj, removeFavObj, removePastEatsObj,
-}) {
-  if (remove === undefined) {
+export default function SearchButtons({ searches }) {
+  // const runNewSearch = () => {
+  //   // restaurant.userId = obj.state;
+  //   // axios.post('/favourite/', restaurant).then((response) => {
+  //   //   console.log(response.data);
+  //   // });
+  // };
+  if (!searches) {
     return <div />;
   }
-  const removeFromFav = () => {
-    restaurant.userId = obj.state;
-    axios.post('/favourite/remove', restaurant).then((response) => {
-      removeFavObj.setter(response.data);
-    });
-  };
-
-  const removeFromPastEats = () => {
-    restaurant.userId = obj.state;
-    axios.post('/past-eats/remove', restaurant).then((response) => {
-      removePastEatsObj.setter(response.data);
-    });
-  };
+  console.log('search button component', searches);
+  const searchArr = searches;
+  const searchList = searchArr.map((search, index) => (
+    <SearchButton search={searchArr[index]} key={search.index} />
+  ));
 
   return (
     <div>
-      {remove === 'removeFav' && <button onClick={removeFromFav}>Remove</button>}
-      {remove === 'removePastEats' && <button onClick={removeFromPastEats}>Remove Past Eats</button>}
+      {searchList}
     </div>
   );
 }
