@@ -38,6 +38,7 @@ class PastSeachesController extends BaseController {
       },
     });
     // Send data to client
+    console.log(pastSearches);
     res.send(pastSearches);
   }
 }

@@ -23,19 +23,19 @@ import Restaurants from './Restaurants.jsx';
  * ========================================================
  */
 export default function NewSearch({ obj }) {
-  // State and setter for photo and postal code
+  // State and setter for photo and address
   const [file, setFile] = useState();
-  const [postalCode, setPostalCode] = useState();
+  const [address, setAddress] = useState();
   const [uploadedImage, setUploadedImage] = useState();
   // // State and setter for restaurant data
   // const [restaurantData, setRestaurantData] = useState();
-  // Callback to send photo, postal code and userId to DB
+  // Callback to send photo, address and userId to DB
   const sendInfoToDB = (event) => {
     // Prevent page from refreshing
     event.preventDefault();
     // Store data in a form
     const data = new FormData();
-    data.append('postalCode', postalCode);
+    data.append('address', address);
     data.append('userId', obj.state);
     data.append('file', file);
     axios.post('/new-search/', data).then((response) => {
@@ -48,8 +48,8 @@ export default function NewSearch({ obj }) {
   return (
     <>
       <form action="#">
-        <label htmlFor="postalcode">Postal Code</label>
-        <input type="text" id="postalcode" name="postalcode" placeholder="Postal Code" onChange={(event) => setPostalCode(event.target.value)} />
+        <label htmlFor="address">Address</label>
+        <input type="text" id="address" name="address" placeholder="Address" onChange={(event) => setAddress(event.target.value)} />
         <br />
         <label htmlFor="file">Upload Food Image</label>
         <input type="file" id="file" name="file" onChange={(event) => setFile(event.target.files[0])} accept="image/*" />

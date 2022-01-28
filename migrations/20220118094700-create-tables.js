@@ -40,8 +40,8 @@ module.exports = {
       dish_name: {
         type: Sequelize.STRING,
       },
-      postal_code: {
-        type: Sequelize.INTEGER,
+      address: {
+        type: Sequelize.STRING,
       },
       created_at: {
         allowNull: false,

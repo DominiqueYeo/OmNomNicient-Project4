@@ -28,7 +28,9 @@ export default function Favourites({ obj }) {
     axios.post('/favourite/retrieve', obj).then((response) => {
       setRetrievedFavData(response.data);
     });
+    console.log('useEffectSearach', retrievedFavData);
   }, []);
+  console.log('outside useEffect', retrievedFavData);
 
   const removeFavObj = {
     state: retrievedFavData,

@@ -22,7 +22,7 @@ const router = express.Router();
  */
 export default function pastSearchesRouter(controller) {
   // Route for retrieving past searches
-  router.post('/', controller.pastSearch.bind(controller));
+  router.post('/retrieve', controller.pastSearch.bind(controller));
 
   return router;
 }
