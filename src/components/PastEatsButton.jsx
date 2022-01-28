@@ -27,10 +27,10 @@ export default function PastEatsButton({ restaurant, pastEats, obj }) {
   if (pastEats !== 'show') {
     return <div />;
   }
+
   const addToPastEatsDB = () => {
     restaurant.userId = obj.state;
-    axios.post('/past-eats/', restaurant).then((response) => {
-      console.log(response.data);
+    axios.post('/past-eats/', restaurant).then(() => {
     });
   };
 

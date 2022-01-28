@@ -1,8 +1,6 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-loop-func */
 /* eslint-disable no-await-in-loop */
-/* eslint-disable max-len */
-/* eslint-disable class-methods-use-this */
 /* eslint-disable no-useless-constructor */
 /*
  * ========================================================
@@ -72,7 +70,7 @@ class NewSearchController extends BaseController {
 
     /*
      * ========================================================
-     *         3. Search google maps for places selling dish
+     *        3. Search google maps for places selling dish
      * ========================================================
      */
     const { userId } = req.body;
@@ -82,7 +80,6 @@ class NewSearchController extends BaseController {
     const dish = dishData.replaceAll('_', '+');
     // Concatenate address with '+'
     const convertedAddress = address.replaceAll(' ', '+');
-    console.log(convertedAddress);
 
     /* After search is made and TensorFlow has identified dish,
     check if stored in DB, else store data in DB */
@@ -102,7 +99,7 @@ class NewSearchController extends BaseController {
     let lat = '';
     let lng = '';
 
-    // 1. Convert users postal code into lat and long coordinates for next API call
+    // 1. Google API call to convert users address into lat and long coordinates
     const coordinatesConfig = {
       method: 'get',
       url: `https://maps.googleapis.com/maps/api/geocode/json?address=${convertedAddress}&key=${process.env.REACT_APP_API_KEY}`,
@@ -123,16 +120,16 @@ class NewSearchController extends BaseController {
         console.log(error);
       });
 
-    // 2. Get request to generate restaurant data
     const restaurantConfig = {
       method: 'get',
-      url: `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lng}&query=${dish}&radius=5000&key=${
+      url: `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lng}&query=${dish}&radius=1500&key=${
         process.env.REACT_APP_API_KEY
       }`,
       headers: {},
     };
     console.log('resaurant configURL', restaurantConfig.url);
 
+    // 2. Google API call to get restaurant data
     await axios(restaurantConfig)
       .then((response) => {
         console.log('restaurant search working');
@@ -154,7 +151,7 @@ class NewSearchController extends BaseController {
         console.log(error);
       });
 
-    // 3. Get restaurant photo
+    // 3. Google API call to get restaurant photos
     for (let j = 0; j < restaurantData.length; j += 1) {
       if (restaurantData[j].photoRef === 'noPhoto') {
         restaurantData[j].photoRef = 'https://c.tenor.com/ZztVmkKG2TIAAAAM/pepe-sad-pepe-crying.gif';
@@ -179,7 +176,7 @@ class NewSearchController extends BaseController {
     }
     /*
     * ========================================================
-    *        5. Send data back to front-end to be displayed
+    *      5. Send data back to front-end to be displayed
     * ========================================================
     */
     const data = {

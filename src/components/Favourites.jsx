@@ -24,13 +24,12 @@ import Restaurants from './Restaurants.jsx';
 export default function Favourites({ obj }) {
   const [retrievedFavData, setRetrievedFavData] = useState();
 
+  // Get favourited restaurants to render on page
   useEffect(() => {
     axios.post('/favourite/retrieve', obj).then((response) => {
       setRetrievedFavData(response.data);
     });
-    console.log('useEffectSearach', retrievedFavData);
   }, []);
-  console.log('outside useEffect', retrievedFavData);
 
   const removeFavObj = {
     state: retrievedFavData,

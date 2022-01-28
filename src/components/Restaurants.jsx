@@ -27,6 +27,7 @@ export default function Restaurants({
   if (!restaurantData) {
     return <div />;
   }
+
   const resArr = restaurantData;
   const restaurantList = resArr.map((restaurant, index) => (<Restaurant key={restaurant.index} restaurant={resArr[index]} obj={obj} removeFavObj={removeFavObj} removePastEatsObj={removePastEatsObj} fav={fav} pastEats={pastEats} remove={remove} />));
 

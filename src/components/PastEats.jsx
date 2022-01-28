@@ -24,6 +24,7 @@ import Restaurants from './Restaurants.jsx';
 export default function PastEats({ obj }) {
   const [retrievedPastEatData, setRetrievedPastEatData] = useState();
 
+  // Get restaurants added to past eats, to render on page
   useEffect(() => {
     axios.post('/past-eats/retrieve', obj).then((response) => {
       setRetrievedPastEatData(response.data);

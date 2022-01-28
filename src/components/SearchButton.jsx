@@ -1,6 +1,4 @@
 /* eslint-disable react/button-has-type */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-return-assign */
 /* eslint-disable react/prop-types */
 /*
  * ========================================================
@@ -23,23 +21,35 @@ import React from 'react';
  * ========================================================
  * ========================================================
  */
-export default function SearchButton({ search }) {
-  // const runNewSearch = () => {
-  //   // restaurant.userId = obj.state;
-  //   // axios.post('/favourite/', restaurant).then((response) => {
-  //   //   console.log(response.data);
-  //   // });
-  // };
-  console.log('search button component', search);
+export default function SearchButton({ search, newSearchObj }) {
+  // Make new API call in backend when button is pressed - to generate list of restaurants
+  const runNewSearch = () => {
+    axios.post('/past-searches/new-search', search).then((response) => {
+      newSearchObj.setter(response.data);
+    });
+  };
+  // Format restaurant name and address before displaying on button
+  const formatString = (string) => {
+    const nameWithSpace = string.replaceAll('+', ' ');
+
+    const arr = nameWithSpace.split(' ');
+
+    for (let i = 0; i < arr.length; i += 1) {
+      arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+    }
+    const nameUpperCase = arr.join(' ');
+
+    return nameUpperCase;
+  };
 
   return (
     <div>
-      <button>
-        {search.dishName}
+      <button onClick={runNewSearch}>
+        {formatString(search.dishName)}
         {' '}
-        at
+        @
         {' '}
-        {search.address}
+        {formatString(search.address)}
       </button>
     </div>
   );

@@ -27,8 +27,7 @@ export default function NewSearch({ obj }) {
   const [file, setFile] = useState();
   const [address, setAddress] = useState();
   const [uploadedImage, setUploadedImage] = useState();
-  // // State and setter for restaurant data
-  // const [restaurantData, setRestaurantData] = useState();
+
   // Callback to send photo, address and userId to DB
   const sendInfoToDB = (event) => {
     // Prevent page from refreshing
