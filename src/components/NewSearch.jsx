@@ -9,9 +9,9 @@
  * ========================================================
  * ========================================================
  */
-import React, { useState } from 'react';
-import axios from 'axios';
-import Restaurants from './Restaurants.jsx';
+import React, { useState } from "react";
+import axios from "axios";
+import Restaurants from "./Restaurants.jsx";
 
 /*
  * ========================================================
@@ -31,32 +31,71 @@ export default function NewSearch({ obj }) {
   // const [restaurantData, setRestaurantData] = useState();
   // Callback to send photo, address and userId to DB
   const sendInfoToDB = (event) => {
+    const loader = document.getElementById("loader-container");
+    loader.style.display = "flex";
     // Prevent page from refreshing
     event.preventDefault();
     // Store data in a form
     const data = new FormData();
-    data.append('address', address);
-    data.append('userId', obj.state);
-    data.append('file', file);
-    axios.post('/new-search/', data).then((response) => {
+    data.append("address", address);
+    data.append("userId", obj.state);
+    data.append("file", file);
+    axios.post("/new-search/", data).then((response) => {
       // Update restaurant variable state
       obj.resSetter(response.data.restaurantData);
       setUploadedImage(response.data.filePath);
+      loader.style.display = "none";
     });
   };
 
+  console.log(file);
+
   return (
     <>
-      <form action="#">
-        <label htmlFor="address">Address</label>
-        <input type="text" id="address" name="address" placeholder="Address" onChange={(event) => setAddress(event.target.value)} />
-        <br />
-        <label htmlFor="file">Upload Food Image</label>
-        <input type="file" id="file" name="file" onChange={(event) => setFile(event.target.files[0])} accept="image/*" />
-        <button type="submit" onClick={sendInfoToDB}>Submit </button>
+      <form id="submitImageForm" action="#">
+        <div>
+          <div>
+            <label htmlFor="address">Address</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              placeholder="Address"
+              onChange={(event) => setAddress(event.target.value)}
+            />
+          </div>
+          <div>
+            <label className="imageChooseLabel" htmlFor="file">
+              Upload Food Image
+            </label>
+            <input
+              type="file"
+              className="invis"
+              id="file"
+              name="file"
+              onChange={(event) => setFile(event.target.files[0])}
+              accept="image/*"
+            />
+          </div>
+          {file !== undefined && (
+            <img src={URL.createObjectURL(file)} width="200" height="200"></img>
+          )}
+          <div>
+            <button className="btn" type="submit" onClick={sendInfoToDB}>
+              Submit{" "}
+            </button>
+          </div>
+        </div>
       </form>
-      <Restaurants restaurantData={obj.resState} fav="show" pastEats="show" obj={obj} />
-      { uploadedImage !== undefined && <img src={uploadedImage} alt="chicken rice" />}
+      <Restaurants
+        restaurantData={obj.resState}
+        fav="show"
+        pastEats="show"
+        obj={obj}
+      />
+      <div id="loader-container">
+        <img src="https://cdn.dribbble.com/users/645440/screenshots/3266490/loader-2_food.gif"></img>
+      </div>
     </>
   );
 }
