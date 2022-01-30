@@ -9,7 +9,7 @@
  * ========================================================
  * ========================================================
  */
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import FavButton from './FavButton.jsx';
 import PastEatsButton from './PastEatsButton.jsx';
 import RemoveButton from './RemoveButton.jsx';
@@ -29,6 +29,20 @@ export default function Restaurant({
   if (!restaurant) {
     return <div />;
   }
+  const starRef = useRef();
+  // Convert ratings into stars CSS
+  function getRatings(rating) {
+    // Total stars
+    const starsTotal = 5;
+    // Get percentage
+    const starPercentage = `${(rating / starsTotal) * 100}%`;
+    // Set width of stars-inner to percentage
+    useEffect(() => {
+      const innerStarElement = starRef.current;
+      innerStarElement.style.width = starPercentage;
+    }, []);
+  }
+
   return (
     <div>
       <img src={restaurant.photoRef} alt={restaurant.name} />
@@ -39,7 +53,16 @@ export default function Restaurant({
         {restaurant.address}
       </div>
       <div>
-        {restaurant.rating}
+        {getRatings(restaurant.rating)}
+        <div className="stars-outer">
+          <div className="stars-inner" ref={starRef} />
+        </div>
+        <div className="number-rating">
+          {'  '}
+          {restaurant.rating}
+          {' '}
+          Stars
+        </div>
       </div>
       <FavButton restaurant={restaurant} fav={fav} obj={obj} />
       <PastEatsButton restaurant={restaurant} pastEats={pastEats} obj={obj} />
