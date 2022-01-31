@@ -14,14 +14,14 @@ import { useNavigate } from 'react-router-dom';
 import LoginMessage from './LoginMessage.jsx';
 
 /*
-* ========================================================
-* ========================================================
-*
-*   Component for Landing Page when user first loads App
-*
-* ========================================================
-* ========================================================
-*/
+ * ========================================================
+ * ========================================================
+ *
+ *   Component for Landing Page when user first loads App
+ *
+ * ========================================================
+ * ========================================================
+ */
 export default function LandingPage({ obj }) {
   // React hook to change to home page on successful login
   const navigate = useNavigate();
@@ -33,11 +33,11 @@ export default function LandingPage({ obj }) {
   const [message, setMessage] = useState('');
 
   /*
-  * ========================================================
-  *      On click of sign up button, verify data in DB
-  *                and inform user of outcome
-  * ========================================================
-  */
+   * ========================================================
+   *      On click of sign up button, verify data in DB
+   *                and inform user of outcome
+   * ========================================================
+   */
   const signUpAttempt = () => {
     const data = {
       userEmail: email,
@@ -60,11 +60,11 @@ export default function LandingPage({ obj }) {
   };
 
   /*
-  * ========================================================
-  *      On click of login button, verify data in DB
-  *                and inform user of outcome
-  * ========================================================
-  */
+   * ========================================================
+   *      On click of login button, verify data in DB
+   *                and inform user of outcome
+   * ========================================================
+   */
   const loginAttempt = () => {
     const data = {
       userEmail: email,
@@ -91,12 +91,37 @@ export default function LandingPage({ obj }) {
   };
 
   return (
-    <div>
-      <input name="email" id="email" placeholder="Email" onChange={(event) => setEmail(event.target.value)} />
-      <input name="password" id="password" type="password" placeholder="Password" onChange={(event) => setPassword(event.target.value)} />
-      <button type="submit" onClick={signUpAttempt}>Sign Up </button>
-      <button type="submit" onClick={loginAttempt}>Login </button>
-      <LoginMessage displayMessage={message} />
+    <div className="loginBox">
+      <p className="logo">
+        <i className="fas fa-utensils" />
+        OM-NOM-NISCIENT
+      </p>
+      <div className="loginSmallBox">
+        <input
+          name="email"
+          id="email"
+          placeholder="Email"
+          onChange={(event) => setEmail(event.target.value)}
+        />
+        <input
+          name="password"
+          id="password"
+          type="password"
+          placeholder="Password"
+          onChange={(event) => setPassword(event.target.value)}
+        />
+      </div>
+      <div>
+        <button className="btn" type="submit" onClick={signUpAttempt}>
+          Sign Up
+          {' '}
+        </button>
+        <button className="btn" type="submit" onClick={loginAttempt}>
+          Login
+          {' '}
+        </button>
+        <LoginMessage displayMessage={message} />
+      </div>
     </div>
   );
 }

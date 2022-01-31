@@ -41,6 +41,9 @@ export default function PastSearches({ obj }) {
     <div>
       <SearchButtons searches={pastSearchData} newSearchObj={newSearchObj} />
       <PastSearchesNew newSearchObj={newSearchObj} obj={obj} />
+      <div id="loader-container">
+        <img src="https://cdn.dribbble.com/users/645440/screenshots/3266490/loader-2_food.gif" />
+      </div>
     </div>
   );
 }

@@ -36,6 +36,7 @@ export default function Restaurant({
     const starsTotal = 5;
     // Get percentage
     const starPercentage = `${(rating / starsTotal) * 100}%`;
+    console.log(starPercentage);
     // Set width of stars-inner to percentage
     useEffect(() => {
       const innerStarElement = starRef.current;

@@ -61,7 +61,7 @@ class NewSearchController extends BaseController {
      * ========================================================
      */
     // const pythonTF = execSync(
-    //   'python3 "./public/tf_script.py" '
+    //   'python3 "./public/tf_script.py" ',
     // );
     const dishData = fs.readFileSync('./public/outputDish.txt',
       { encoding: 'utf8', flag: 'r' });
@@ -122,7 +122,7 @@ class NewSearchController extends BaseController {
 
     const restaurantConfig = {
       method: 'get',
-      url: `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lng}&query=${dish}&radius=1500&key=${
+      url: `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lng}&query=${dish}&radius=500&key=${
         process.env.REACT_APP_API_KEY
       }`,
       headers: {},
@@ -137,7 +137,7 @@ class NewSearchController extends BaseController {
         restaurantData = [];
         const restaurantsArr = response.data.results;
         // Run loop to extract relevant data to be displayed
-        for (let i = 0; i < 10; i += 1) {
+        for (let i = 0; i < 12; i += 1) {
           const restaurantObj = {};
           restaurantObj.name = restaurantsArr[i].name ? restaurantsArr[i].name : 'No Name';
           restaurantObj.address = restaurantsArr[i].formatted_address ? restaurantsArr[i].formatted_address : 'No Address';
