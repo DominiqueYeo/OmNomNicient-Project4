@@ -48,19 +48,18 @@ export default function RemoveButton({
   };
 
   return (
-    <div>
+    <div className="remove-container">
       {remove === 'removeFav' && (
-      <button onClick={removeFromFav}>
+      <button onClick={removeFromFav} className="fa-remove-btn">
         <i className="fas fa-trash">
-          {' '}
-          <div className="remove-bubble">Remove</div>
+          <span className="remove-bubble">Remove</span>
         </i>
       </button>
       )}
       {remove === 'removePastEats' && (
-      <button onClick={removeFromPastEats}>
+      <button onClick={removeFromPastEats} className="fa-remove-btn">
         <i className="fas fa-trash">
-          <div className="remove-bubble">Remove</div>
+          <span className="remove-bubble">Remove</span>
         </i>
       </button>
       )}

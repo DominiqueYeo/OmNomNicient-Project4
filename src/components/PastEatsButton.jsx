@@ -38,16 +38,16 @@ export default function PastEatsButton({ restaurant, pastEats, obj }) {
   };
 
   return (
-    <div>
+    <div className="past-eats-container">
       {pastEats = 'show' && (
-      <button onClick={addToPastEatsDB}>
+      <button onClick={addToPastEatsDB} className="fa-past-eats-btn">
         {pastEatsBtn ? (
           <i className="fas fa-hamburger fa-hamburger-filled">
-            <div className="past-eats-bubble">Past Eats</div>
+            <div className="past-eats-bubble">Add to Past Eats</div>
           </i>
         ) : (
           <i className="fas fa-hamburger">
-            <div className="past-eats-bubble">Past Eats</div>
+            <div className="past-eats-bubble">Add to Past Eats</div>
           </i>
         )}
       </button>

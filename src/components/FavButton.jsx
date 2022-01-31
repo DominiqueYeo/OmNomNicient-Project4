@@ -40,16 +40,16 @@ export default function FavButton({ restaurant, fav, obj }) {
   };
 
   return (
-    <div>
+    <div className="favourite-container">
       {fav = 'show' && (
-      <button onClick={addToFavDB}>
+      <button onClick={addToFavDB} className="fa-heart-btn">
         {favBtn ? (
           <i className="fas fa-heart fa-heart-filled">
-            <div className="favourite-bubble">Favourite</div>
+            <div className="favourite-bubble">Add to Favourites</div>
           </i>
         ) : (
           <i className="fas fa-heart">
-            <div className="favourite-bubble">Favourite</div>
+            <div className="favourite-bubble">Add to Favourites</div>
           </i>
         ) }
       </button>

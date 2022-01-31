@@ -38,7 +38,7 @@ export default function PastEats({ obj }) {
 
   return (
     <div>
-      <Restaurants restaurantData={retrievedPastEatData} remove="removePastEats" obj={obj} removePastEatsObj={removePastEatsObj} />
+      <Restaurants restaurantData={retrievedPastEatData} remove="removePastEats" fav="show" obj={obj} removePastEatsObj={removePastEatsObj} />
     </div>
   );
 }

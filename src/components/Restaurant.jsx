@@ -45,29 +45,37 @@ export default function Restaurant({
   }
 
   return (
-    <div>
-      <img src={restaurant.photoRef} alt={restaurant.name} />
-      <div>
-        {restaurant.name}
+    <div className="restaurant">
+
+      <div className="restaurant-image">
+        <img src={restaurant.photoRef} alt={restaurant.name} />
       </div>
-      <div>
-        {restaurant.address}
-      </div>
-      <div>
-        {getRatings(restaurant.rating)}
-        <div className="stars-outer">
-          <div className="stars-inner" ref={starRef} />
+      <div className="restaurant-container">
+        <div className="restaurant-words">
+          <div className="restaurant-name">
+            {restaurant.name}
+          </div>
+          <div className="restaurant-address">
+            {restaurant.address}
+          </div>
+          <div className="stars-container ">
+            {getRatings(restaurant.rating)}
+            <div className="stars-outer">
+              <div className="stars-inner" ref={starRef} />
+            </div>
+            <span className="number-rating">
+              <span className="restaurant-rating">
+                {restaurant.rating}
+              </span>
+            </span>
+          </div>
         </div>
-        <div className="number-rating">
-          {'  '}
-          {restaurant.rating}
-          {' '}
-          Stars
+        <div className="restaurant-icons">
+          <FavButton restaurant={restaurant} fav={fav} obj={obj} />
+          <PastEatsButton restaurant={restaurant} pastEats={pastEats} obj={obj} />
+          <RemoveButton restaurant={restaurant} remove={remove} obj={obj} removeFavObj={removeFavObj} removePastEatsObj={removePastEatsObj} />
         </div>
       </div>
-      <FavButton restaurant={restaurant} fav={fav} obj={obj} />
-      <PastEatsButton restaurant={restaurant} pastEats={pastEats} obj={obj} />
-      <RemoveButton restaurant={restaurant} remove={remove} obj={obj} removeFavObj={removeFavObj} removePastEatsObj={removePastEatsObj} />
     </div>
   );
 }

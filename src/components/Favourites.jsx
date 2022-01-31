@@ -38,7 +38,7 @@ export default function Favourites({ obj }) {
 
   return (
     <div>
-      <Restaurants restaurantData={retrievedFavData} remove="removeFav" obj={obj} removeFavObj={removeFavObj} />
+      <Restaurants restaurantData={retrievedFavData} remove="removeFav" pastEats="show" obj={obj} removeFavObj={removeFavObj} />
     </div>
   );
 }

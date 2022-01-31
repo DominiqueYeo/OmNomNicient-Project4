@@ -9,8 +9,8 @@
  * ========================================================
  * ========================================================
  */
-import React from "react";
-import Restaurant from "./Restaurant.jsx";
+import React from 'react';
+import Restaurant from './Restaurant.jsx';
 
 /*
  * ========================================================
@@ -48,5 +48,5 @@ export default function Restaurants({
     />
   ));
 
-  return <div>{restaurantList}</div>;
+  return <div className="restaurants">{restaurantList}</div>;
 }
