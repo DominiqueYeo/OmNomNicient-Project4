@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /*
@@ -30,6 +31,7 @@ export default function NewSearch({ obj }) {
 
   // Callback to send photo, address and userId to DB
   const sendInfoToDB = (event) => {
+    const scanner = document.getElementById('scanner');
     const loader = document.getElementById('loader-container');
     loader.style.display = 'flex';
     // Prevent page from refreshing
@@ -44,47 +46,63 @@ export default function NewSearch({ obj }) {
       obj.resSetter(response.data.restaurantData);
       setUploadedImage(response.data.filePath);
       loader.style.display = 'none';
+      scanner.style.display = 'block';
     });
   };
 
   return (
-    <>
-      <form id="submitImageForm" action="#">
-        <div>
-          <div>
-            <label htmlFor="address">Address</label>
-            <input
-              type="text"
-              id="address"
-              name="address"
-              placeholder="Address"
-              onChange={(event) => setAddress(event.target.value)}
-            />
-          </div>
-          <div>
-            <label className="imageChooseLabel" htmlFor="file">
-              Upload Food Image
-            </label>
-            <input
-              type="file"
-              className="invis"
-              id="file"
-              name="file"
-              onChange={(event) => setFile(event.target.files[0])}
-              accept="image/*"
-            />
-          </div>
-          {file !== undefined && (
-            <img src={URL.createObjectURL(file)} width="200" height="200" />
-          )}
-          <div>
-            <button className="btn" type="submit" onClick={sendInfoToDB}>
-              Submit
-              {' '}
-            </button>
+    <div>
+      <div className="top-section">
+        <div className="home-description-container">
+          <div className="home-description">
+            <p className="main-text">Upload a photo of any food</p>
+            <p className="main-text">Enter an address</p>
+            <p className="main-text">We'll identify the dish </p>
+            <p className="main-text">And recommend good (hopefully) stalls near you!</p>
           </div>
         </div>
-      </form>
+        <form id="submitImageForm" action="#">
+          <div id="img-container">
+            <div id="scanner">
+
+              {file !== undefined && (
+              <img src={URL.createObjectURL(file)} width="200" height="200" id="form-img" />
+              )}
+            </div>
+          </div>
+          <div id="form-container">
+            <div id="form-img-btn">
+              <label className="imageChooseLabel btn" htmlFor="file">
+                Upload Food Image
+              </label>
+              <input
+                type="file"
+                className="invis"
+                id="file"
+                name="file"
+                onChange={(event) => setFile(event.target.files[0])}
+                accept="image/*"
+              />
+            </div>
+            <div id="form-address">
+              <label htmlFor="address" />
+              <input
+                type="text"
+                id="address"
+                name="address"
+                placeholder="Input Address Here!"
+                onChange={(event) => setAddress(event.target.value)}
+              />
+            </div>
+            <div id="form-submit">
+              <button className="btn submit" type="submit" onClick={sendInfoToDB}>
+                Submit
+                {' '}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
       <Restaurants
         restaurantData={obj.resState}
         fav="show"
@@ -94,6 +112,6 @@ export default function NewSearch({ obj }) {
       <div id="loader-container">
         <img src="https://cdn.dribbble.com/users/645440/screenshots/3266490/loader-2_food.gif" />
       </div>
-    </>
+    </div>
   );
 }

@@ -96,6 +96,9 @@ export default function NavBar() {
           <Link to="/fav">{fav ? <span className="navbar-fav nav-bar-background" onClick={favChange}> Favourites</span> : <span className="navbar-fav" onClick={favChange}> Favourites</span>}</Link>
           <Link to="/eats">{ pastEats ? <span className="navbar-past-eats nav-bar-background" onClick={pastEatChange}> Past Eats</span> : <span className="navbar-past-eats" onClick={pastEatChange}> Past Eats</span>}</Link>
           <Link to="/searches">{pastSearch ? <span className="navbar-past-searches nav-bar-background" onClick={pastSearchChange}> Past Searches</span> : <span className="navbar-past-searches" onClick={pastSearchChange}> Past Searches</span>}</Link>
+          <Link to="/main">
+            <span className="navbar-logout"><i className="fas fa-power-off" /></span>
+          </Link>
         </nav>
       </header>
       <Outlet />
