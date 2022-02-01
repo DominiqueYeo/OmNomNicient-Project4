@@ -180,7 +180,7 @@ class NewSearchController extends BaseController {
     * ========================================================
     */
     const data = {
-      restaurantData, filePath: imagePath,
+      restaurantData, filePath: imagePath, dish, address: convertedAddress,
     };
     res.send(data);
   }

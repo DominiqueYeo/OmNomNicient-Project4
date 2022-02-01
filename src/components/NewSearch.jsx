@@ -27,11 +27,27 @@ export default function NewSearch({ obj }) {
   // State and setter for photo and address
   const [file, setFile] = useState();
   const [address, setAddress] = useState();
-  const [uploadedImage, setUploadedImage] = useState();
+  const [description, setDesciption] = useState(true);
+  const [displayDish, setDisplayDish] = useState();
+  const [displayAddress, setDisplayAddress] = useState();
+  // const [uploadedImage, setUploadedImage] = useState();
+
+  // Format restaurant name and address before displaying on button
+  const formatString = (string) => {
+    const nameWithSpace = string.replaceAll('+', ' ');
+
+    const arr = nameWithSpace.split(' ');
+
+    for (let i = 0; i < arr.length; i += 1) {
+      arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+    }
+    const nameUpperCase = arr.join(' ');
+
+    return nameUpperCase;
+  };
 
   // Callback to send photo, address and userId to DB
   const sendInfoToDB = (event) => {
-    const scanner = document.getElementById('scanner');
     const loader = document.getElementById('loader-container');
     loader.style.display = 'flex';
     // Prevent page from refreshing
@@ -42,11 +58,19 @@ export default function NewSearch({ obj }) {
     data.append('userId', obj.state);
     data.append('file', file);
     axios.post('/new-search/', data).then((response) => {
+      const { dish } = response.data;
+      const addressResult = response.data.address;
+      setDisplayAddress(formatString(addressResult));
+      setDisplayDish(formatString(dish));
+
       // Update restaurant variable state
       obj.resSetter(response.data.restaurantData);
-      setUploadedImage(response.data.filePath);
+
+      // setUploadedImage(response.data.filePath);
       loader.style.display = 'none';
-      scanner.style.display = 'block';
+
+      // Update description to show dish determined
+      setDesciption(false);
     });
   };
 
@@ -54,21 +78,32 @@ export default function NewSearch({ obj }) {
     <div>
       <div className="top-section">
         <div className="home-description-container">
-          <div className="home-description">
-            <p className="main-text">Upload a photo of any food</p>
-            <p className="main-text">Enter an address</p>
-            <p className="main-text">We'll identify the dish </p>
-            <p className="main-text">And recommend good (hopefully) stalls near you!</p>
-          </div>
+          { description ? (
+            <div className="home-description">
+              <p className="main-text">Upload a photo of any food</p>
+              <p className="main-text">Enter an address</p>
+              <p className="main-text">We'll identify the dish </p>
+              <p className="main-text">And recommend good (hopefully) stalls near you!</p>
+            </div>
+          )
+            : (
+              <div className="home-results">
+                <p className="results-text">Your Dish: </p>
+                <p className="results-text-dish">{displayDish}</p>
+              </div>
+            )}
         </div>
         <form id="submitImageForm" action="#">
           <div id="img-container">
-            <div id="scanner">
 
-              {file !== undefined && (
-              <img src={URL.createObjectURL(file)} width="200" height="200" id="form-img" />
-              )}
-            </div>
+            { file !== undefined
+              ? (
+                <div id="scanner">
+
+                  <img src={URL.createObjectURL(file)} width="200" height="200" id="form-img" />
+
+                </div>
+              ) : <div />}
           </div>
           <div id="form-container">
             <div id="form-img-btn">
@@ -103,6 +138,18 @@ export default function NewSearch({ obj }) {
           </div>
         </form>
       </div>
+      {displayAddress !== undefined ? (
+        <div id="search-made">
+          Showing results for:
+          <p id="search-results">
+            {displayDish}
+            {' '}
+            near
+            {' '}
+            {displayAddress}
+          </p>
+        </div>
+      ) : <div />}
       <Restaurants
         restaurantData={obj.resState}
         fav="show"
