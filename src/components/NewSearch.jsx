@@ -35,14 +35,11 @@ export default function NewSearch({ obj }) {
   // Format restaurant name and address before displaying on button
   const formatString = (string) => {
     const nameWithSpace = string.replaceAll('+', ' ');
-
     const arr = nameWithSpace.split(' ');
-
     for (let i = 0; i < arr.length; i += 1) {
       arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
     }
     const nameUpperCase = arr.join(' ');
-
     return nameUpperCase;
   };
 
@@ -80,10 +77,10 @@ export default function NewSearch({ obj }) {
         <div className="home-description-container">
           { description ? (
             <div className="home-description">
-              <p className="main-text">Upload a photo of any food</p>
-              <p className="main-text">Enter an address</p>
-              <p className="main-text">We'll identify the dish </p>
-              <p className="main-text">And recommend good (hopefully) stalls near you!</p>
+              <p className="main-text">Upload A Photo Of Any Food</p>
+              <p className="main-text">Enter An Address</p>
+              <p className="main-text">We'll Identify The Dish </p>
+              <p className="main-text">And Recommend The Best Stalls Near You!</p>
             </div>
           )
             : (

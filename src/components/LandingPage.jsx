@@ -91,35 +91,38 @@ export default function LandingPage({ obj }) {
   };
 
   return (
-    <div className="loginBox">
-      <p className="logo">
-        <i className="fas fa-utensils" />
-        OM-NOM-NISCIENT
-      </p>
-      <div className="loginSmallBox">
-        <input
-          name="email"
-          id="email"
-          placeholder="Email"
-          onChange={(event) => setEmail(event.target.value)}
-        />
-        <input
-          name="password"
-          id="password"
-          type="password"
-          placeholder="Password"
-          onChange={(event) => setPassword(event.target.value)}
-        />
-      </div>
-      <div>
-        <button className="btn" type="submit" onClick={signUpAttempt}>
-          Sign Up
-          {' '}
-        </button>
-        <button className="btn" type="submit" onClick={loginAttempt}>
-          Login
-          {' '}
-        </button>
+    <div id="landing-background">
+
+      <div className="loginBox">
+        <p className="logo">
+          <i className="fas fa-utensils" />
+          OM-NOM-NISCIENT
+        </p>
+        <div className="loginSmallBox">
+          <input
+            name="email"
+            id="email"
+            placeholder="Email"
+            onChange={(event) => setEmail(event.target.value)}
+          />
+          <input
+            name="password"
+            id="password"
+            type="password"
+            placeholder="Password"
+            onChange={(event) => setPassword(event.target.value)}
+          />
+        </div>
+        <div className="btn-container">
+          <button className="btn sub-btn" type="submit" onClick={signUpAttempt}>
+            Sign Up
+            {' '}
+          </button>
+          <button className="btn login-btn" type="submit" onClick={loginAttempt}>
+            Login
+            {' '}
+          </button>
+        </div>
         <LoginMessage displayMessage={message} />
       </div>
     </div>

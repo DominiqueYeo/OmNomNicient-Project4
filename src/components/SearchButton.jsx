@@ -47,7 +47,7 @@ export default function SearchButton({ search, newSearchObj }) {
 
   return (
     <div>
-      <button onClick={runNewSearch}>
+      <button className="search-btn" onClick={runNewSearch}>
         {formatString(search.dishName)}
         {' '}
         @

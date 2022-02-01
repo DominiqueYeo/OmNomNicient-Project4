@@ -29,6 +29,7 @@ export default function Restaurant({
   if (!restaurant) {
     return <div />;
   }
+
   const starRef = useRef();
   // Convert ratings into stars CSS
   function getRatings(rating) {
@@ -48,7 +49,7 @@ export default function Restaurant({
     <div className="restaurant">
 
       <div className="restaurant-image">
-        <img src={restaurant.photoRef} alt={restaurant.name} />
+        {restaurant.photoRef === 'https://c.tenor.com/ZztVmkKG2TIAAAAM/pepe-sad-pepe-crying.gif' ? <img src={restaurant.photoRef} alt={restaurant.name} style={{ objectFit: 'contain' }} /> : <img src={restaurant.photoRef} alt={restaurant.name} style={{ objectFit: 'cover' }} />}
       </div>
       <div className="restaurant-container">
         <div className="restaurant-words">
@@ -58,7 +59,7 @@ export default function Restaurant({
           <div className="restaurant-address">
             {restaurant.address}
           </div>
-          <div className="stars-container ">
+          <div className="stars-container">
             {getRatings(restaurant.rating)}
             <div className="stars-outer">
               <div className="stars-inner" ref={starRef} />
