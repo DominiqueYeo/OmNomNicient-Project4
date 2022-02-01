@@ -38,7 +38,16 @@ export default function Favourites({ obj }) {
 
   return (
     <div>
-      <Restaurants restaurantData={retrievedFavData} remove="removeFav" obj={obj} removeFavObj={removeFavObj} />
+      <div className="top-section-fav">
+        <div className="home-description-container-fav">
+          <p className="main-text-large">Favourites.</p>
+          <p className="main-text">Save Places To Eat At Later!</p>
+        </div>
+        {/* <div id="img-container-fav">
+          <img className='fav-img' src="https://st.depositphotos.com/30046358/53398/v/380/depositphotos_533989162-stock-illustration-fast-food-hamburger-vector-isolated.jpg?forcejpeg=true" alt="burger" />
+        </div> */}
+      </div>
+      <Restaurants restaurantData={retrievedFavData} remove="removeFav" pastEats="show" obj={obj} removeFavObj={removeFavObj} />
     </div>
   );
 }

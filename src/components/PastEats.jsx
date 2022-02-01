@@ -38,7 +38,17 @@ export default function PastEats({ obj }) {
 
   return (
     <div>
-      <Restaurants restaurantData={retrievedPastEatData} remove="removePastEats" obj={obj} removePastEatsObj={removePastEatsObj} />
+      <div className="top-section-past-eats">
+        <div className="home-description-container-past-eats">
+          <p className="main-text-large">Past Eats.</p>
+          <p className="main-text">Don't Worry!</p>
+          <p className="main-text">We're All Creatures Of Habit.</p>
+        </div>
+        {/* <div id="img-container-fav">
+          <img className='fav-img' src="https://st.depositphotos.com/30046358/53398/v/380/depositphotos_533989162-stock-illustration-fast-food-hamburger-vector-isolated.jpg?forcejpeg=true" alt="burger" />
+        </div> */}
+      </div>
+      <Restaurants restaurantData={retrievedPastEatData} remove="removePastEats" fav="show" obj={obj} removePastEatsObj={removePastEatsObj} />
     </div>
   );
 }

@@ -24,8 +24,11 @@ import React from 'react';
 export default function SearchButton({ search, newSearchObj }) {
   // Make new API call in backend when button is pressed - to generate list of restaurants
   const runNewSearch = () => {
+    const loader = document.getElementById('loader-container');
+    loader.style.display = 'flex';
     axios.post('/past-searches/new-search', search).then((response) => {
       newSearchObj.setter(response.data);
+      loader.style.display = 'none';
     });
   };
   // Format restaurant name and address before displaying on button
@@ -44,7 +47,7 @@ export default function SearchButton({ search, newSearchObj }) {
 
   return (
     <div>
-      <button onClick={runNewSearch}>
+      <button className="search-btn" onClick={runNewSearch}>
         {formatString(search.dishName)}
         {' '}
         @

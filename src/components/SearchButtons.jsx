@@ -31,7 +31,7 @@ export default function SearchButtons({ searches, newSearchObj }) {
   ));
 
   return (
-    <div>
+    <div id="buttons-container">
       {searchList}
     </div>
   );

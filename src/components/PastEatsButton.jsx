@@ -12,7 +12,7 @@
  * ========================================================
  */
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 
 /*
  * ========================================================
@@ -28,15 +28,30 @@ export default function PastEatsButton({ restaurant, pastEats, obj }) {
     return <div />;
   }
 
+  const [pastEatsBtn, setPastEatsBtn] = useState(false);
+
   const addToPastEatsDB = () => {
+    setPastEatsBtn(true);
     restaurant.userId = obj.state;
     axios.post('/past-eats/', restaurant).then(() => {
     });
   };
 
   return (
-    <div>
-      {pastEats = 'show' && <button onClick={addToPastEatsDB}>Past Eats</button>}
+    <div className="past-eats-container">
+      {pastEats = 'show' && (
+      <button onClick={addToPastEatsDB} className="fa-past-eats-btn">
+        {pastEatsBtn ? (
+          <i className="fas fa-hamburger fa-hamburger-filled">
+            <div className="past-eats-bubble">Add to Past Eats</div>
+          </i>
+        ) : (
+          <i className="fas fa-hamburger">
+            <div className="past-eats-bubble">Add to Past Eats</div>
+          </i>
+        )}
+      </button>
+      )}
     </div>
   );
 }

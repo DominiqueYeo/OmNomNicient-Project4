@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
@@ -47,9 +48,21 @@ export default function RemoveButton({
   };
 
   return (
-    <div>
-      {remove === 'removeFav' && <button onClick={removeFromFav}>Remove</button>}
-      {remove === 'removePastEats' && <button onClick={removeFromPastEats}>Remove Past Eats</button>}
+    <div className="remove-container">
+      {remove === 'removeFav' && (
+      <button onClick={removeFromFav} className="fa-remove-btn">
+        <i className="fas fa-trash">
+          <span className="remove-bubble">Remove</span>
+        </i>
+      </button>
+      )}
+      {remove === 'removePastEats' && (
+      <button onClick={removeFromPastEats} className="fa-remove-btn">
+        <i className="fas fa-trash">
+          <span className="remove-bubble">Remove</span>
+        </i>
+      </button>
+      )}
     </div>
   );
 }

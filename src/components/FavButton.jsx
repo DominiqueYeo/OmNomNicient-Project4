@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
@@ -12,7 +13,7 @@
  * ========================================================
  */
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 
 /*
  * ========================================================
@@ -28,16 +29,31 @@ export default function FavButton({ restaurant, fav, obj }) {
     return <div />;
   }
 
+  const [favBtn, setFavBtn] = useState(false);
+
   // Send data to server to be stored in DB
   const addToFavDB = () => {
+    setFavBtn(true);
     restaurant.userId = obj.state;
     axios.post('/favourite/', restaurant).then(() => {
     });
   };
 
   return (
-    <div>
-      {fav = 'show' && <button onClick={addToFavDB}>Favourite</button>}
+    <div className="favourite-container">
+      {fav = 'show' && (
+      <button onClick={addToFavDB} className="fa-heart-btn">
+        {favBtn ? (
+          <i className="fas fa-heart fa-heart-filled">
+            <div className="favourite-bubble">Add to Favourites</div>
+          </i>
+        ) : (
+          <i className="fas fa-heart">
+            <div className="favourite-bubble">Add to Favourites</div>
+          </i>
+        ) }
+      </button>
+      )}
     </div>
   );
 }
