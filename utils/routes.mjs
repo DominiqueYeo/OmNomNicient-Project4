@@ -18,7 +18,7 @@ import pastSearchesRouter from '../routers/pastSearchesRouter.mjs';
 
 // Import controllers
 import UserController from '../controllers/userController.mjs';
-import NewSearchController from '../controllers/newSearchController.mjs';
+import NewSearchController from '../controllers/homeController.mjs';
 import FavouriteController from '../controllers/favouriteController.mjs';
 import PastEatsController from '../controllers/pastEatsController.mjs';
 import PastSearchesController from '../controllers/pastSearchesController.mjs';
