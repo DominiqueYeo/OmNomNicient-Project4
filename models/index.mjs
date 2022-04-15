@@ -2,10 +2,15 @@ import { Sequelize } from 'sequelize';
 import url from 'url';
 import allConfig from '../config/config.js';
 
+// Import models
+import userModel from './user.mjs';
+import pastEatModel from './pastEat.mjs';
+import pastSearchModel from './pastSearch.mjs';
+import favouriteModel from './favourite.mjs';
+import restaurantModel from './restaurant.mjs';
+
 const env = process.env.NODE_ENV || 'development';
-
 const config = allConfig[env];
-
 const db = {};
 
 let sequelize;
@@ -29,6 +34,24 @@ if (env === 'production') {
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
+
+db.User = userModel(sequelize, Sequelize.DataTypes);
+db.PastEat = pastEatModel(sequelize, Sequelize.DataTypes);
+db.PastSearch = pastSearchModel(sequelize, Sequelize.DataTypes);
+db.Favourite = favouriteModel(sequelize, Sequelize.DataTypes);
+db.Restaurant = restaurantModel(sequelize, Sequelize.DataTypes);
+
+db.User.hasMany(db.PastEat);
+db.PastEat.belongsTo(db.User);
+db.User.hasMany(db.PastSearch);
+db.PastSearch.belongsTo(db.User);
+db.User.hasMany(db.Favourite);
+db.Favourite.belongsTo(db.User);
+
+db.User.belongsToMany(db.Restaurant, { through: 'favourite' });
+db.Restaurant.belongsToMany(db.User, { through: 'favourite' });
+db.User.belongsToMany(db.Restaurant, { through: 'past_eat' });
+db.Restaurant.belongsToMany(db.User, { through: 'past_eat' });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

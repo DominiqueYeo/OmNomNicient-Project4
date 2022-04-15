@@ -22,6 +22,7 @@
   "homepage": "https://github.com/DominiqueYeo/project_4#readme",
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-runtime": "^7.16.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
@@ -54,13 +55,15 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "cookie-parser": "^1.4.5",
     "dotenv": "^14.2.0",
-    "ejs": "^3.1.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "method-override": "^3.0.0",
+    "multer": "^1.4.4",
     "pg": "^8.5.1",
+    "react-hook-form": "^7.25.1",
+    "react-router-dom": "^6.2.1",
+    "require-main-filename": "^2.0.0",
     "sequelize": "^6.3.5"
   }
 }
