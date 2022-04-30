@@ -31,7 +31,7 @@
  </ul>
 
  <details>
-<summary><i><b> How We Achieved It: </b></i></summary>
+<summary><i><b> How We Built This: </b></i></summary>
  <ol>
   <li><b> Identify Dish: </b><br/> When an image is uploaded, it is passed through a TensorFlow supervised learning, machine learning model which identifies the dish.</li>
   <li><b> Identify Address Coordinates: </b><br/> 
